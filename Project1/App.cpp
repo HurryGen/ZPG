@@ -54,6 +54,8 @@ App::App() {
 	
 }
 
+
+
 void App::error_callback(int error, const char* description)
 {
 	fputs(description, stderr);
@@ -85,7 +87,21 @@ void App::window_size_callback(GLFWwindow* window, int width, int height)
 void App::cursor_callback(GLFWwindow* window, double x, double y)
 {
 	printf("cursor_callback \n");
+	int width, height;
+	glfwGetWindowSize(window, &width, &height);
+
+	float xoffset = x - (width / 2);
+	float yoffset = (height / 2) - y;
+
+	glfwSetCursorPos(window, width / 2, height / 2);
+
+	camera->updatePosition(xoffset, yoffset);
+	
+	
 }
+
+
+
 
 void App::button_callback(GLFWwindow* window, int button, int action, int mode)
 {
@@ -94,6 +110,7 @@ void App::button_callback(GLFWwindow* window, int button, int action, int mode)
 
 void App::initialization()
 {
+	
 	glfwSetErrorCallback(error_callback);
 	if (!glfwInit()) {
 		fprintf(stderr, "ERROR: could not start GLFW3\n");
@@ -136,23 +153,31 @@ void App::initialization()
 	float ratio = width / (float)height;
 	glViewport(0, 0, width, height);
 	glfwSetKeyCallback(window, key_callback);
-	glfwSetCursorPosCallback(window, cursor_callback);
+	//glfwSetCursorPosCallback(window, cursor_callback);
 	glfwSetMouseButtonCallback(window, button_callback);
 	glfwSetWindowFocusCallback(window, window_focus_callback);
 	glfwSetWindowIconifyCallback(window, window_iconify_callback);
 	glfwSetWindowSizeCallback(window, window_size_callback);
-
-	
 	
 
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	glfwSetCursorPos(window, width / 2, height / 2);
+	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
+		App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
+		if (app) {
+			app->cursor_callback(window,xpos, ypos);
+		}
+		});
 
+	glfwSetWindowUserPointer(window, this);
 
 }
 
 void App::createShaders()
 {
-	shader = new Shader(vertex_shader2, fragment_shader2);
+	shader = new Shader(vertex_shader2, fragment_shader2, camera);
 	shader1 = new Shader(vertex_shader, fragment_shader);
+	camera->registerShader(shader);
 
 }
 
@@ -162,6 +187,10 @@ void App::createModels()
 	bushModel = new Model(bushes, sizeof(bushes) / sizeof(bushes[0]), GL_TRIANGLES, 0, sizeof(bushes));
 	giftModel = new Model(gift, sizeof(gift) / sizeof(gift[0]), GL_TRIANGLES, 0, sizeof(gift));
 }
+void App::createCameras()
+{
+	camera = new Camera();
+}
 
 void App::createScenes()
 {
@@ -169,59 +198,46 @@ void App::createScenes()
 	scene1 = new Scene();
 	scene2 = new Scene();
 
-	/*scene1->addobject(new drawableobject(treemodel, shader));
-	transformation.scale(0.2f, 0.2f, 0.2f);
-	transformation.translate(-0.7f,-0.7f, 0.f);
-	scene1->getObjects().at(0)->setTransformation(transformation);
-	scene1->addObject(new DrawableObject(treeModel, shader));
-	transformation.reset();
-	transformation.scale(0.2f, 0.2f, 0.2f);
-	transformation.translate(0.7f, -0.7f, 0.f);
-	transformation.rotate(90.f, 0.3f, 1.f, 0.f);
-	scene1->getObjects().at(1)->setTransformation(transformation);
-	scene1->addObject(new DrawableObject(bushModel, shader));
-	transformation.reset();
-	transformation.scale(1.f, 1.f, 1.f);
-	transformation.translate(0.f, -1.f, 0.f);
-	scene1->getObjects().at(2)->setTransformation(transformation);
-	scene1->addObject(new DrawableObject(giftModel, shader));
-	transformation.reset();
-	transformation.rotate(180.f, 0.f, 1.f, 0.f);
-	scene1->getObjects().at(3)->setTransformation(transformation);
+	
 
-	scene2->addObject(new DrawableObject(treeModel, shader));*/
+	scene2->addObject(new DrawableObject(treeModel, shader));
 	
 	for (int i = 0; i < 100; i++) {
-		std::srand(static_cast<unsigned int>(16161616+i*565));
-		int lowerBound = -360;
-		int upperBound = 360;
-		float randAngle = (std::rand() % (upperBound - lowerBound + 1)) + lowerBound;
-		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound)/100;
-		float y = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound) / 100;
-		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound) / 100;
+		std::srand(static_cast<unsigned int>(6646545+i*1000000));
+		int lowerBoundAngle = -360;
+		int upperBoundAngle = 360;
+		int upperBound = 10;
+		int lowerBound = -10;
+		int upperBoundHeigth = 100;
+		int lowerBoundHeigth = 10;
+		float randAngle = (std::rand() % (upperBoundAngle - lowerBoundAngle + 1)) + lowerBoundAngle;
+		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth)/100;
+		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
+		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		DrawableObject* drawableTree = new DrawableObject(treeModel, shader);
 		Transformation transformation;
-		transformation.scale(0.2f, 0.2f, 0.2f);
+		transformation.scale(0.5f * heigth, 0.5f * heigth, 0.5f * heigth);
 		transformation.rotate(randAngle,0.0f, 1.0f, 0.0f);
-		transformation.translate(x,y,z);
+		transformation.translate(x, 0.f,z);
 		drawableTree->setTransformation(transformation);
 		scene1->addObject(drawableTree);
 		
 		
 	}
 	for (int i = 0; i < 100; i++) {
-		std::srand(static_cast<unsigned int>(16161616 + i * 725));
-		int lowerBound = -360;
-		int upperBound = 360;
-		float randAngle = (std::rand() % (upperBound - lowerBound + 1)) + lowerBound;
-		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound) / 100;
-		float y = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound) / 100;
-		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound) / 100;
+		std::srand(static_cast<unsigned int>(544565465654 + i * 100000));
+		int lowerBoundAngle = -360;
+		int upperBoundAngle = 360;
+		int upperBound = 10;
+		int lowerBound = -10;
+		float randAngle = (std::rand() % (upperBoundAngle - lowerBoundAngle + 1)) + lowerBoundAngle;
+		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
+		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		DrawableObject* drawableBush = new DrawableObject(bushModel, shader);
 		Transformation transformation;
-		transformation.scale(0.2f, 0.2f, 0.2f);
+		//transformation.scale(0.2f, 0.2f, 0.2f);
 		transformation.rotate(randAngle, 0.0f, 1.0f, 0.0f);
-		transformation.translate(x, y, z);
+		transformation.translate(x, 0.f, z);
 		drawableBush->setTransformation(transformation);
 		scene1->addObject(drawableBush);
 
@@ -232,6 +248,8 @@ void App::createScenes()
 
 void App::run()
 {
+	
+	
 	Transformation transformationScene2;
 	transformationScene2.scale(0.2f, 0.2f, 0.2f);
 	transformationScene2.translate(0.f, -0.7f, 0.f);
@@ -243,6 +261,18 @@ void App::run()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//model->draw(GL_TRIANGLES, 0, 3);
 		//model->draw(GL_QUADS, 3, 4);
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			camera->moveForward();
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			camera->moveBackward();
+		}
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			camera->moveLeft();
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+			camera->moveRight();
+		}
 		
 
 		if (sceneIndex == 0) {

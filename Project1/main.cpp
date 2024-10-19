@@ -14,8 +14,10 @@ int main(void)
 	app->initialization(); //OpenGL inicialization
 
 	//Loading scene
+	app->createCameras();
 	app->createShaders();
 	app->createModels();
 	app->createScenes();
+	
 	app->run(); //Rendering 
 }

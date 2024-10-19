@@ -5,18 +5,35 @@
 #include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
+#include "Shader.h"
+#include <vector>
 
-
+class Shader;
 class Camera
 {
 public:
 	Camera();
-	~Camera();
 	glm::mat4 getCamera();
+	void moveLeft();
+	void moveRight();
+	void moveForward();
+	void moveBackward();
+	void updateCameraVector();
+	glm::mat4 getProjection();
+	void updatePosition(float x, float y);
+	void registerShader(Shader* shader);
+	void notifyShaders();
+
 
 private:
 	glm::vec3 eye;
 	glm::vec3 target;
 	glm::vec3 up;
+	glm::mat4 projectionMat;
+	std::vector<Shader*> shaders;
+	float alpha;
+	float fi;
+	float movementSpeed;
+	
 };
 
