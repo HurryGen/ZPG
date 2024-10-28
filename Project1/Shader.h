@@ -4,8 +4,9 @@
 #include <GL/glew.h>
 #include <string>
 #include "Transformation.h"
-#include "Camera.h"
+
 #include "Observer.h"
+#include "Camera.h"
 
 //Include GLM  
 #include <glm/vec3.hpp> // glm::vec3
@@ -14,15 +15,14 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
-class Camera;
-class Shader
+
+class Shader : public Observer
 {
 public:
-	Shader(const char* vertex_shader, const char* fragment_shader);
-	Shader(const char* vertex_shader,const char* fragment_shader, Camera* camera);
+	Shader(const char* vertex_shader,const char* fragment_shader);
 	~Shader();
 	void setTransformation(Transformation &transformation);
-	void updateCameraPosition();
+	void update(Subject* subject) override;
 	void use();
 
 private:
@@ -33,7 +33,6 @@ private:
 	GLint idModelTransform;
 	GLint idModelView;
 	GLint idModelProjection;
-	Camera* camera;
 };
 
 #endif

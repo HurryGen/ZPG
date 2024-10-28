@@ -39,6 +39,7 @@ private:
 	GLFWwindow* window;
 	Shader* shader;
 	Shader* shader1;
+	Shader* shaderWithLight;
 	Model* treeModel;
 	Model* bushModel;
 	Model* giftModel;

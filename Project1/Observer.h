@@ -1,9 +1,10 @@
 #pragma once
-#include "Transformation.h"
+#include "Subject.h"
+
+class Subject;
 class Observer
 {
 public:
-	virtual void setTransformation(Transformation& transformation) = 0;
-	virtual void use() = 0;
+	virtual void update(Subject* subject) = 0;
 };
 

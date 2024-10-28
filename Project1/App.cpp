@@ -31,6 +31,21 @@ const char* vertex_shader2 =
 "     color = vn;"
 "}";
 
+const char* vertex_shader3 =
+"#version 330\n"
+"layout(location = 0) in vec3 vp;"
+"layout(location = 1) in vec3 vn;"
+"uniform mat4 modelMatrix;"
+"uniform mat4 viewMatrix;"
+"uniform mat4 projectionMatrix;"
+"out vec3 fragNormal;"
+"out vec3 fragPosition;"
+"void main() {"
+	"gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4 (vp, 1.0);"
+	"fragNormal = mat3(transpose(inverse(model))) * vn;"
+	"fragPosition = vec3(model * vec4(vp, 1.0));"
+" }";
+
 
 
 const char* fragment_shader =
@@ -48,6 +63,29 @@ const char* fragment_shader2 =
 "     frag_colour = color;"	
 "}";
 
+
+const char* fragment_shader3 =
+"#version 400\n"
+"in vec3 fragPosition;"
+"in vec3 fragNormal;"
+"out vec4 fragColor;"
+"const vec3 lightPos = vec3(0.0, 0.0, 0.0);"
+"const vec4 lightColor = vec4(0.3, 0.3, 1.0, 1.0);"
+"const vec4 ambient = vec4(0.25, 0.25, 0.25, 1.0);"
+"const float specularStrength = 15.0;"
+"const vec3 viewDir = vec3(0.0, 0.0, 0.0);"
+"void main(void)"
+"{"
+	"vec3 normal = normalize(fragNormal);"
+	"vec3 lightDir = normalize(lightPos - fragPosition);"
+	"float diffIntensity = max(dot(normal, lightDir), 0.0);"
+	"vec3 reflectDir = reflect(-lightDir, normal);"
+	"float spec = pow(max(dot(normalize(viewDir), reflectDir), 0.0), 32.0);"
+	"vec4 objectColor = vec4(0.8, 0.8, 0.8, 1.0);"
+	"vec4 diffuseColor = diffIntensity * lightColor;"
+	"vec4 specularColor = specularStrength * spec * lightColor;"
+	"fragColor = ambient + (diffuseColor + specularColor) * objectColor;"
+"}";
 
 
 App::App() {
@@ -124,7 +162,7 @@ void App::initialization()
 	glfwWindowHint(GLFW_OPENGL_PROFILE,
 	GLFW_OPENGL_CORE_PROFILE);  //*/
 
-	window = glfwCreateWindow(800, 600, "ZPG", NULL, NULL);
+	window = glfwCreateWindow(1600, 1200, "ZPG", NULL, NULL);
 	if (!window) {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
@@ -175,9 +213,11 @@ void App::initialization()
 
 void App::createShaders()
 {
-	shader = new Shader(vertex_shader2, fragment_shader2, camera);
+	shader = new Shader(vertex_shader2, fragment_shader2);
 	shader1 = new Shader(vertex_shader, fragment_shader);
-	camera->registerShader(shader);
+	shaderWithLight = new Shader(vertex_shader3, fragment_shader3);
+	camera->attach(shader);
+	camera->attach(shaderWithLight);
 
 }
 
@@ -203,7 +243,7 @@ void App::createScenes()
 	scene2->addObject(new DrawableObject(treeModel, shader));
 	
 	for (int i = 0; i < 100; i++) {
-		std::srand(static_cast<unsigned int>(6646545+i*1000000));
+		//std::srand(static_cast<unsigned int>(6646545+i*1000000));
 		int lowerBoundAngle = -360;
 		int upperBoundAngle = 360;
 		int upperBound = 10;
@@ -225,17 +265,21 @@ void App::createScenes()
 		
 	}
 	for (int i = 0; i < 100; i++) {
-		std::srand(static_cast<unsigned int>(544565465654 + i * 100000));
+		//std::srand(static_cast<unsigned int>(544565465654 + i * 100000));
 		int lowerBoundAngle = -360;
 		int upperBoundAngle = 360;
 		int upperBound = 10;
 		int lowerBound = -10;
+		int upperBoundHeigth = 300;
+		int lowerBoundHeigth = 10;
 		float randAngle = (std::rand() % (upperBoundAngle - lowerBoundAngle + 1)) + lowerBoundAngle;
+		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth) / 100;
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		DrawableObject* drawableBush = new DrawableObject(bushModel, shader);
 		Transformation transformation;
 		//transformation.scale(0.2f, 0.2f, 0.2f);
+		transformation.scale(1.f * heigth, 1.f * heigth, 1.f * heigth);
 		transformation.rotate(randAngle, 0.0f, 1.0f, 0.0f);
 		transformation.translate(x, 0.f, z);
 		drawableBush->setTransformation(transformation);

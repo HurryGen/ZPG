@@ -6,10 +6,10 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 #include "Shader.h"
+#include "Subject.h"
 #include <vector>
 
-class Shader;
-class Camera
+class Camera : public Subject
 {
 public:
 	Camera();
@@ -21,8 +21,11 @@ public:
 	void updateCameraVector();
 	glm::mat4 getProjection();
 	void updatePosition(float x, float y);
-	void registerShader(Shader* shader);
-	void notifyShaders();
+
+	void attach(Observer* observer) override;
+	void detach(Observer* observer) override;
+	void notify() override;
+
 
 
 private:
@@ -30,7 +33,7 @@ private:
 	glm::vec3 target;
 	glm::vec3 up;
 	glm::mat4 projectionMat;
-	std::vector<Shader*> shaders;
+	std::vector<Observer*> observers;
 	float alpha;
 	float fi;
 	float movementSpeed;

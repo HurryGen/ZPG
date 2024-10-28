@@ -22,14 +22,14 @@ void Camera::moveLeft()
 {
     glm::vec3 left = glm::normalize(glm::cross(up, target));
     eye += left * movementSpeed;
-    notifyShaders();
+    notify();
 }
 
 void Camera::moveRight()
 {
     glm::vec3 right = glm::normalize(glm::cross(target, up));
     eye += right * movementSpeed;
-    notifyShaders();
+    notify();
 }
 
 void Camera::moveForward()
@@ -37,7 +37,7 @@ void Camera::moveForward()
     
     glm::vec3 forward = glm::normalize(target);
     eye += forward * movementSpeed;
-    notifyShaders();
+    notify();
 }
 
 void Camera::moveBackward()
@@ -45,7 +45,7 @@ void Camera::moveBackward()
     
     glm::vec3 forward = glm::normalize(target);
     eye -= forward * movementSpeed;
-    notifyShaders();
+    notify();
 }
 
 
@@ -56,7 +56,7 @@ void Camera::updateCameraVector()
     target.z = sin(glm::radians(alpha)) * cos(glm::radians(fi));
 
     target = glm::normalize(target);
-    notifyShaders();
+    notify();
 }
 
 glm::mat4 Camera::getProjection()
@@ -85,14 +85,20 @@ void Camera::updatePosition(float x, float y)
 
 }
 
-void Camera::registerShader(Shader* shader)
+
+void Camera::attach(Observer* observer)
 {
-    shaders.push_back(shader);
+    observers.push_back(observer);
 }
 
-void Camera::notifyShaders()
+void Camera::detach(Observer* observer)
 {
-    for (auto shader : shaders) {
-        shader->updateCameraPosition();
+    observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
+}
+
+void Camera::notify()
+{
+    for (auto observer : observers) {
+        observer->update(this);
     }
 }
