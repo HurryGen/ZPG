@@ -7,6 +7,7 @@
 #include "DrawableObject.h"
 #include "Scene.h"
 #include "Camera.h"
+#include "Transformation.h"
 
 //Include GLM  
 #include <glm/vec3.hpp> // glm::vec3

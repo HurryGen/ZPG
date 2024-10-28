@@ -246,8 +246,8 @@ void App::createScenes()
 		//std::srand(static_cast<unsigned int>(6646545+i*1000000));
 		int lowerBoundAngle = -360;
 		int upperBoundAngle = 360;
-		int upperBound = 10;
-		int lowerBound = -10;
+		int upperBound = 20;
+		int lowerBound = -20;
 		int upperBoundHeigth = 100;
 		int lowerBoundHeigth = 10;
 		float randAngle = (std::rand() % (upperBoundAngle - lowerBoundAngle + 1)) + lowerBoundAngle;
@@ -256,9 +256,13 @@ void App::createScenes()
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		DrawableObject* drawableTree = new DrawableObject(treeModel, shader);
 		Transformation transformation;
-		transformation.scale(0.5f * heigth, 0.5f * heigth, 0.5f * heigth);
-		transformation.rotate(randAngle,0.0f, 1.0f, 0.0f);
-		transformation.translate(x, 0.f,z);
+
+		auto translate = std::make_shared<Translate>(x, 0.f, z);
+		transformation.add(translate);
+		auto rotate = std::make_shared<Rotate>(randAngle, 0.0f, 1.0f, 0.0f);
+		transformation.add(rotate);
+		auto scale = std::make_shared<Scale>(0.5f * heigth, 0.5f * heigth, 0.5f * heigth);
+		transformation.add(scale);
 		drawableTree->setTransformation(transformation);
 		scene1->addObject(drawableTree);
 		
@@ -268,8 +272,8 @@ void App::createScenes()
 		//std::srand(static_cast<unsigned int>(544565465654 + i * 100000));
 		int lowerBoundAngle = -360;
 		int upperBoundAngle = 360;
-		int upperBound = 10;
-		int lowerBound = -10;
+		int upperBound = 20;
+		int lowerBound = -20;
 		int upperBoundHeigth = 300;
 		int lowerBoundHeigth = 10;
 		float randAngle = (std::rand() % (upperBoundAngle - lowerBoundAngle + 1)) + lowerBoundAngle;
@@ -278,10 +282,13 @@ void App::createScenes()
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		DrawableObject* drawableBush = new DrawableObject(bushModel, shader);
 		Transformation transformation;
-		//transformation.scale(0.2f, 0.2f, 0.2f);
-		transformation.scale(1.f * heigth, 1.f * heigth, 1.f * heigth);
-		transformation.rotate(randAngle, 0.0f, 1.0f, 0.0f);
-		transformation.translate(x, 0.f, z);
+
+		auto translate = std::make_shared<Translate>(x, 0.f, z);
+		transformation.add(translate);
+		auto rotate = std::make_shared<Rotate>(randAngle, 0.0f, 1.0f, 0.0f);
+		transformation.add(rotate);
+		auto scale = std::make_shared<Scale>(1.f * heigth, 1.f * heigth, 1.f * heigth);
+		transformation.add(scale);
 		drawableBush->setTransformation(transformation);
 		scene1->addObject(drawableBush);
 
@@ -295,8 +302,11 @@ void App::run()
 	
 	
 	Transformation transformationScene2;
-	transformationScene2.scale(0.2f, 0.2f, 0.2f);
-	transformationScene2.translate(0.f, -0.7f, 0.f);
+	auto translate = std::make_shared<Translate>(0.f, -0.7f, 0.f);
+	transformationScene2.add(translate);
+	auto scale = std::make_shared<Scale>(0.5f, 0.5f, 0.5f);
+	transformationScene2.add(scale);
+	
 	float angle = 1.f;
 	int sceneIndex = 0;
 	glEnable(GL_DEPTH_TEST);
@@ -324,8 +334,10 @@ void App::run()
 		}
 		else if (sceneIndex == 1) {
 			scene2->render();
+			auto rotate = std::make_shared<Rotate>(angle, 0.f, 1.f, 0.f);
+			transformationScene2.add(rotate);
 			scene2->getObjects().at(0)->setTransformation(transformationScene2);
-			transformationScene2.rotate(angle, 0.f, 1.f, 0.f);
+			
 			
 		}
 		else if (sceneIndex > 1) {
