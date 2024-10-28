@@ -31,9 +31,6 @@ ShaderProgram::ShaderProgram(const char* vertex_shader, const char* fragment_sha
     idModelTransform = glGetUniformLocation(shaderProgram, "modelMatrix");
     idModelView = glGetUniformLocation(shaderProgram, "viewMatrix");
     idModelProjection = glGetUniformLocation(shaderProgram, "projectionMatrix");
-   
-
-    glUniformMatrix4fv(idModelTransform, 1, GL_FALSE, &M[0][0]);
 
 }
 
