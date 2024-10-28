@@ -1,5 +1,5 @@
-#ifndef SHADER_H
-#define SHADER_H
+#ifndef SHADERPROGRAM_H
+#define SHADERPROGRAM_H
 
 #include <GL/glew.h>
 #include <string>
@@ -16,11 +16,11 @@
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
 
-class Shader : public Observer
+class ShaderProgram : public Observer
 {
 public:
-	Shader(const char* vertex_shader,const char* fragment_shader);
-	~Shader();
+	ShaderProgram(const char* vertex_shader,const char* fragment_shader);
+	~ShaderProgram();
 	void setTransformation(Transformation &transformation);
 	void update(Subject* subject) override;
 	void use();

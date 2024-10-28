@@ -1,9 +1,9 @@
-#include "Shader.h"
+#include "ShaderProgram.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
-Shader::Shader(const char* vertex_shader, const char* fragment_shader) {
+ShaderProgram::ShaderProgram(const char* vertex_shader, const char* fragment_shader) {
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertex_shader, NULL);
     glCompileShader(vertexShader);
@@ -37,14 +37,14 @@ Shader::Shader(const char* vertex_shader, const char* fragment_shader) {
 
 }
 
-void Shader::setTransformation(Transformation& transformation)
+void ShaderProgram::setTransformation(Transformation& transformation)
 {
     M = transformation.getMatrix();
 
     glUniformMatrix4fv(idModelTransform, 1, GL_FALSE, &M[0][0]);
 }
 
-void Shader::update(Subject* subject)
+void ShaderProgram::update(Subject* subject)
 {
     if (auto camera = dynamic_cast<Camera*>(subject)) {
         glUniformMatrix4fv(idModelView, 1, GL_FALSE, glm::value_ptr(camera->getCamera()));
@@ -52,7 +52,7 @@ void Shader::update(Subject* subject)
     }
 }
 
-void Shader::use()
+void ShaderProgram::use()
 {
     glUseProgram(shaderProgram);
 }

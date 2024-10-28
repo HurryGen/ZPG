@@ -213,9 +213,9 @@ void App::initialization()
 
 void App::createShaders()
 {
-	shader = new Shader(vertex_shader2, fragment_shader2);
-	shader1 = new Shader(vertex_shader, fragment_shader);
-	shaderWithLight = new Shader(vertex_shader3, fragment_shader3);
+	shader = new ShaderProgram(vertex_shader2, fragment_shader2);
+	shader1 = new ShaderProgram(vertex_shader, fragment_shader);
+	shaderWithLight = new ShaderProgram(vertex_shader3, fragment_shader3);
 	camera->attach(shader);
 	camera->attach(shaderWithLight);
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "DrawableObject.h"
-#include "Shader.h"
+#include "ShaderProgram.h"
 class Scene
 {
 public:

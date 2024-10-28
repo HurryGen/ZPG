@@ -1,16 +1,16 @@
 #pragma once
 #include "Model.h"
 #include "Transformation.h"
-#include "Shader.h"
+#include "ShaderProgram.h"
 class DrawableObject
 {
 public:
-	DrawableObject(Model* model, Shader* shader);
+	DrawableObject(Model* model, ShaderProgram* shader);
 	void setTransformation(Transformation& transformation);
 	void draw();
 private:
 	Model* model;
 	Transformation transformation;
-	Shader* shader;
+	ShaderProgram* shader;
 };
 

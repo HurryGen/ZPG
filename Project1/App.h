@@ -1,7 +1,7 @@
 #ifndef APP_H
 #define APP_H
 
-#include "Shader.h"
+#include "ShaderProgram.h"
 #include "Model.h"
 #include <GLFW/glfw3.h>
 #include "DrawableObject.h"
@@ -37,9 +37,9 @@ public:
 
 private:
 	GLFWwindow* window;
-	Shader* shader;
-	Shader* shader1;
-	Shader* shaderWithLight;
+	ShaderProgram* shader;
+	ShaderProgram* shader1;
+	ShaderProgram* shaderWithLight;
 	Model* treeModel;
 	Model* bushModel;
 	Model* giftModel;
