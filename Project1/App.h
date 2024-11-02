@@ -8,6 +8,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Transformation.h"
+#include "Light.h"
 
 //Include GLM  
 #include <glm/vec3.hpp> // glm::vec3
@@ -38,15 +39,6 @@ public:
 
 private:
 	GLFWwindow* window;
-	ShaderProgram* shader;
-	ShaderProgram* shader1;
-	ShaderProgram* shaderWithLight;
-	Model* treeModel;
-	Model* bushModel;
-	Model* giftModel;
-	Scene* scene1;
-	Scene* scene2;
-	Camera* camera;
 };
 
 #endif

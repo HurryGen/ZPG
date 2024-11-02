@@ -133,33 +133,50 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DrawableObject.cpp" />
+    <None Include="fragment_shader_camera.glsl">
+      <FileType>Document</FileType>
+    </None>
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Observer.cpp" />
     <ClCompile Include="Rotate.cpp" />
     <ClCompile Include="Scale.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Subject.cpp" />
     <ClCompile Include="Transformation.cpp" />
     <ClCompile Include="TransformationComponent.cpp" />
     <ClCompile Include="Translate.cpp" />
+    <None Include="fragment_shader_light.glsl" />
+    <None Include="fragment_shader_phong.glsl" />
+    <None Include="vertex_shader_camera.glsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="vertex_shader_light.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Models\sphere.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DrawableObject.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Rotate.h" />
     <ClInclude Include="Scale.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="Transformation.h" />
     <ClInclude Include="TransformationComponent.h" />
     <ClInclude Include="Translate.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fragment_shader.glsl" />
+    <None Include="vertex_shader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

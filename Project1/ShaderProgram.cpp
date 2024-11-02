@@ -3,34 +3,23 @@
 #include <fstream>
 #include <sstream>
 
-ShaderProgram::ShaderProgram(const char* vertex_shader, const char* fragment_shader) {
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertex_shader, NULL);
-    glCompileShader(vertexShader);
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragment_shader, NULL);
-    glCompileShader(fragmentShader);
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, fragmentShader);
-    glAttachShader(shaderProgram, vertexShader);
-    glLinkProgram(shaderProgram);
-    glUseProgram(shaderProgram);
-    GLint status;
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &status);
-    if (status == GL_FALSE)
-    {
-        GLint infoLogLength;
-        glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &infoLogLength);
-        GLchar* strInfoLog = new GLchar[infoLogLength + 1];
-        glGetProgramInfoLog(shaderProgram, infoLogLength, NULL, strInfoLog);
-        fprintf(stderr, "Linker failure: %s\n", strInfoLog);
-        delete[] strInfoLog;
+ShaderProgram::ShaderProgram(const char* vertexFilePath, const char* fragmentFilePath) {
+    
+    ShaderLoader shaderLoader;
+    shaderProgram = shaderLoader.loadShader(vertexFilePath, fragmentFilePath);
+
+    
+    if (shaderProgram == 0) {
+        std::cerr << "Failed to create shader program." << std::endl;
+        return;
     }
 
-   
+    
     idModelTransform = glGetUniformLocation(shaderProgram, "modelMatrix");
     idModelView = glGetUniformLocation(shaderProgram, "viewMatrix");
     idModelProjection = glGetUniformLocation(shaderProgram, "projectionMatrix");
+    idLightColor = glGetUniformLocation(shaderProgram, "lightColor");
+    idLightPosition = glGetUniformLocation(shaderProgram, "lightPosition");
 
 }
 
@@ -44,8 +33,15 @@ void ShaderProgram::setTransformation(Transformation& transformation)
 void ShaderProgram::update(Subject* subject)
 {
     if (auto camera = dynamic_cast<Camera*>(subject)) {
+        use();
         glUniformMatrix4fv(idModelView, 1, GL_FALSE, glm::value_ptr(camera->getCamera()));
         glUniformMatrix4fv(idModelProjection, 1, GL_FALSE, glm::value_ptr(camera->getProjection()));
+    }
+
+    if (auto light = dynamic_cast<Light*>(subject)) {
+        use();
+        glUniform3fv(idLightPosition, 1, glm::value_ptr(light->getPosition()));
+        glUniform4fv(idLightColor, 1, glm::value_ptr(light->getColor()));
     }
 }
 

@@ -2,90 +2,22 @@
 #include "../Models/tree.h"
 #include "../Models/bushes.h"
 #include "../Models/gift.h"
+#include "../Models/sphere.h"
 
+ShaderProgram* shader;
+ShaderProgram* shader1;
+ShaderProgram* shaderWithLight;
+ShaderProgram* shaderWithLight1;
+Model* treeModel;
+Model* bushModel;
+Model* giftModel;
+Model* triangleModel;
+Model* sphereModel;
 
-
-
-
-
-
-const char* vertex_shader =
-"#version 330\n"
-"layout(location=0) in vec3 vp;"
-"uniform mat4 modelMatrix;"
-"void main () {"
-"     gl_Position = modelMatrix * vec4 (vp, 1.0);"
-"}";
-
-
-const char* vertex_shader2 =
-"#version 330\n"
-"layout(location=0) in vec3 vp;"
-"layout(location=1) in vec4 vn;"
-"uniform mat4 modelMatrix;"
-"uniform mat4 viewMatrix;"
-"uniform mat4 projectionMatrix;"
-"out vec4 color;"
-"void main () {"
-"     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4 (vp, 1.0);"
-"     color = vn;"
-"}";
-
-const char* vertex_shader3 =
-"#version 330\n"
-"layout(location = 0) in vec3 vp;"
-"layout(location = 1) in vec3 vn;"
-"uniform mat4 modelMatrix;"
-"uniform mat4 viewMatrix;"
-"uniform mat4 projectionMatrix;"
-"out vec3 fragNormal;"
-"out vec3 fragPosition;"
-"void main() {"
-	"gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4 (vp, 1.0);"
-	"fragNormal = mat3(transpose(inverse(model))) * vn;"
-	"fragPosition = vec3(model * vec4(vp, 1.0));"
-" }";
-
-
-
-const char* fragment_shader =
-"#version 330\n"
-"out vec4 frag_colour;"
-"void main () {"
-"     frag_colour = vec4 (0.5, 0.0, 0.5, 1.0);"
-"}";
-
-const char* fragment_shader2 =
-"#version 330\n"
-"in vec4 color;"
-"out vec4 frag_colour;"
-"void main () {"
-"     frag_colour = color;"	
-"}";
-
-
-const char* fragment_shader3 =
-"#version 400\n"
-"in vec3 fragPosition;"
-"in vec3 fragNormal;"
-"out vec4 fragColor;"
-"const vec3 lightPos = vec3(0.0, 0.0, 0.0);"
-"const vec4 lightColor = vec4(0.3, 0.3, 1.0, 1.0);"
-"const vec4 ambient = vec4(0.25, 0.25, 0.25, 1.0);"
-"const float specularStrength = 15.0;"
-"const vec3 viewDir = vec3(0.0, 0.0, 0.0);"
-"void main(void)"
-"{"
-	"vec3 normal = normalize(fragNormal);"
-	"vec3 lightDir = normalize(lightPos - fragPosition);"
-	"float diffIntensity = max(dot(normal, lightDir), 0.0);"
-	"vec3 reflectDir = reflect(-lightDir, normal);"
-	"float spec = pow(max(dot(normalize(viewDir), reflectDir), 0.0), 32.0);"
-	"vec4 objectColor = vec4(0.8, 0.8, 0.8, 1.0);"
-	"vec4 diffuseColor = diffIntensity * lightColor;"
-	"vec4 specularColor = specularStrength * spec * lightColor;"
-	"fragColor = ambient + (diffuseColor + specularColor) * objectColor;"
-"}";
+Scene* scene1;
+Scene* scene2;
+Scene* scene;
+Camera* camera;
 
 
 App::App() {
@@ -211,21 +143,48 @@ void App::initialization()
 
 }
 
+
+
+
 void App::createShaders()
 {
-	shader = new ShaderProgram(vertex_shader2, fragment_shader2);
-	shader1 = new ShaderProgram(vertex_shader, fragment_shader);
-	shaderWithLight = new ShaderProgram(vertex_shader3, fragment_shader3);
+	shader = new ShaderProgram("vertex_shader_camera.glsl","fragment_shader_camera.glsl");
+	shader1 = new ShaderProgram("vertex_shader.glsl", "fragment_shader.glsl");
+	shaderWithLight = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_light.glsl");
+	shaderWithLight1 = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_phong.glsl");
+
 	camera->attach(shader);
 	camera->attach(shaderWithLight);
+	camera->attach(shaderWithLight1);
+
+	// Create a light source
+	Light* light1 = new Light(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
+	Light* light2 = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
+	
+	
+
+
+	light1->attach(shaderWithLight);
+	light2->attach(shaderWithLight1);
+	light1->notify();
+	light2->notify();
 
 }
 
 void App::createModels()
 {
+	float points[] = {
+	 0.0f, 0.5f, 0.0f,
+	 0.5f, -0.5f, 0.0f,
+	-0.5f, -0.5f, 0.0f,
+
+	};
+
 	treeModel = new Model(tree, sizeof(tree)/sizeof(tree[0]), GL_TRIANGLES, 0, sizeof(bushes));
 	bushModel = new Model(bushes, sizeof(bushes) / sizeof(bushes[0]), GL_TRIANGLES, 0, sizeof(bushes));
 	giftModel = new Model(gift, sizeof(gift) / sizeof(gift[0]), GL_TRIANGLES, 0, sizeof(gift));
+	triangleModel = new Model(points, sizeof(points) / sizeof(points[0]), GL_TRIANGLES, 0, 3);
+	sphereModel = new Model(sphere, sizeof(sphere) / sizeof(sphere[0]), GL_TRIANGLES, 0, sizeof(sphere));
 }
 void App::createCameras()
 {
@@ -237,13 +196,11 @@ void App::createScenes()
 	//Transformation transformation;
 	scene1 = new Scene();
 	scene2 = new Scene();
-
-	
-
-	scene2->addObject(new DrawableObject(treeModel, shader));
+	scene = new Scene();
+	scene->addObject(new DrawableObject(triangleModel, shader1));
 	
 	for (int i = 0; i < 100; i++) {
-		//std::srand(static_cast<unsigned int>(6646545+i*1000000));
+		std::srand(static_cast<unsigned int>(6646545+i*1000000));
 		int lowerBoundAngle = -360;
 		int upperBoundAngle = 360;
 		int upperBound = 20;
@@ -254,7 +211,7 @@ void App::createScenes()
 		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth)/100;
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		DrawableObject* drawableTree = new DrawableObject(treeModel, shader);
+		DrawableObject* drawableTree = new DrawableObject(treeModel, shaderWithLight);
 		Transformation transformation;
 
 		auto translate = std::make_shared<Translate>(x, 0.f, z);
@@ -269,7 +226,7 @@ void App::createScenes()
 		
 	}
 	for (int i = 0; i < 100; i++) {
-		//std::srand(static_cast<unsigned int>(544565465654 + i * 100000));
+		std::srand(static_cast<unsigned int>(544565465654 + i * 100000));
 		int lowerBoundAngle = -360;
 		int upperBoundAngle = 360;
 		int upperBound = 20;
@@ -280,7 +237,7 @@ void App::createScenes()
 		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth) / 100;
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		DrawableObject* drawableBush = new DrawableObject(bushModel, shader);
+		DrawableObject* drawableBush = new DrawableObject(bushModel, shaderWithLight);
 		Transformation transformation;
 
 		auto translate = std::make_shared<Translate>(x, 0.f, z);
@@ -294,24 +251,50 @@ void App::createScenes()
 
 
 	}
+
+
+	
+	
+
+	DrawableObject* drawableSphere1 = new DrawableObject(sphereModel, shaderWithLight1);
+	Transformation transformation1;
+	
+	transformation1.add(std::make_shared <Translate>(1.f, 1.f, 0.f));
+	drawableSphere1->setTransformation(transformation1);
+	scene2->addObject(drawableSphere1);
+
+	DrawableObject* drawableSphere2 = new DrawableObject(sphereModel, shaderWithLight1);
+	Transformation transformation2;
+	transformation2.add(std::make_shared <Translate>(-1.f, 1.f, 0.f));
+	drawableSphere2->setTransformation(transformation2);
+	scene2->addObject(drawableSphere2);
+
+	DrawableObject* drawableSphere3 = new DrawableObject(sphereModel, shaderWithLight1);
+	Transformation transformation3;
+	transformation3.add(std::make_shared <Translate>(1.f, -1.f, 0.f));
+	drawableSphere3->setTransformation(transformation3);
+	scene2->addObject(drawableSphere3);
+
+	DrawableObject* drawableSphere4 = new DrawableObject(sphereModel, shaderWithLight1);
+	Transformation transformation4;
+	transformation4.add(std::make_shared <Translate>(-1.f, -1.f, 0.f));
+	drawableSphere4->setTransformation(transformation4);
+	scene2->addObject(drawableSphere4);
+
+
+
+
+	
 	
 }
 
 void App::run()
 {
-	
-	
-	Transformation transformationScene2;
-	auto translate = std::make_shared<Translate>(0.f, -0.7f, 0.f);
-	transformationScene2.add(translate);
-	auto scale = std::make_shared<Scale>(0.5f, 0.5f, 0.5f);
-	transformationScene2.add(scale);
-	
-	float angle = 1.f;
 	int sceneIndex = 0;
+	
 	glEnable(GL_DEPTH_TEST);
 	while (!glfwWindowShouldClose(window)) {
-		// clear color and depth buffer
+		//clear color and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//model->draw(GL_TRIANGLES, 0, 3);
 		//model->draw(GL_QUADS, 3, 4);
@@ -330,27 +313,24 @@ void App::run()
 		
 
 		if (sceneIndex == 0) {
+			scene->render();
+		}
+		if (sceneIndex == 1) {
 			scene1->render();
 		}
-		else if (sceneIndex == 1) {
+		if (sceneIndex == 2) {
 			scene2->render();
-			auto rotate = std::make_shared<Rotate>(angle, 0.f, 1.f, 0.f);
-			transformationScene2.add(rotate);
-			scene2->getObjects().at(0)->setTransformation(transformationScene2);
-			
-			
 		}
-		else if (sceneIndex > 1) {
-			sceneIndex = 1;
-		}
-		else if (sceneIndex < 0) {
-			sceneIndex = 0;
-		}
+		
+		
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
 			sceneIndex = 0;
 		}
 		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
 			sceneIndex = 1;
+		}
+		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+			sceneIndex = 2;
 		}
 		
 		
