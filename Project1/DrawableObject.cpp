@@ -8,6 +8,11 @@ void DrawableObject::setTransformation(Transformation& transformation)
 	shader->setTransformation(transformation);
 }
 
+ShaderProgram* DrawableObject::getShaderProgram()
+{
+	return shader;
+}
+
 void DrawableObject::draw()
 {
 	shader->use();

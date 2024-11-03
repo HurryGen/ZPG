@@ -3,19 +3,29 @@
 #include "../Models/bushes.h"
 #include "../Models/gift.h"
 #include "../Models/sphere.h"
+#include "../Models/suzi_smooth.h"
 
 ShaderProgram* shader;
 ShaderProgram* shader1;
 ShaderProgram* shaderWithLight;
 ShaderProgram* shaderWithLight1;
+ShaderProgram* shaderPhong;
+ShaderProgram* shaderBlinn;
+ShaderProgram* shaderLambert;
+ShaderProgram* shaderConstant;
+
+
+
 Model* treeModel;
 Model* bushModel;
 Model* giftModel;
 Model* triangleModel;
 Model* sphereModel;
+Model* suziSmoothModel;
 
 Scene* scene1;
 Scene* scene2;
+Scene* scene3;
 Scene* scene;
 Camera* camera;
 
@@ -150,34 +160,19 @@ void App::createShaders()
 {
 	shader = new ShaderProgram("vertex_shader_camera.glsl","fragment_shader_camera.glsl");
 	shader1 = new ShaderProgram("vertex_shader.glsl", "fragment_shader.glsl");
-	shaderWithLight = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_light.glsl");
-	shaderWithLight1 = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_phong.glsl");
-
-	camera->attach(shader);
-	camera->attach(shaderWithLight);
-	camera->attach(shaderWithLight1);
-
-	// Create a light source
-	Light* light1 = new Light(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
-	Light* light2 = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
-	
-	
-
-
-	light1->attach(shaderWithLight);
-	light2->attach(shaderWithLight1);
-	light1->notify();
-	light2->notify();
+	shaderPhong = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_phong.glsl");
+	shaderBlinn = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_blinn.glsl");
+	shaderLambert = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_lambert.glsl");
+	shaderConstant = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_light.glsl");
 
 }
 
 void App::createModels()
 {
 	float points[] = {
-	 0.0f, 0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	-0.5f, -0.5f, 0.0f,
-
+	0.0f, 0.5f, 0.0f, 0,0,0,
+	0.5f, -0.5f, 0.0f, 0,0,0,
+   - 0.5f, -0.5f, 0.0f, 0,0,0,
 	};
 
 	treeModel = new Model(tree, sizeof(tree)/sizeof(tree[0]), GL_TRIANGLES, 0, sizeof(bushes));
@@ -185,6 +180,7 @@ void App::createModels()
 	giftModel = new Model(gift, sizeof(gift) / sizeof(gift[0]), GL_TRIANGLES, 0, sizeof(gift));
 	triangleModel = new Model(points, sizeof(points) / sizeof(points[0]), GL_TRIANGLES, 0, 3);
 	sphereModel = new Model(sphere, sizeof(sphere) / sizeof(sphere[0]), GL_TRIANGLES, 0, sizeof(sphere));
+	suziSmoothModel = new Model(suziSmooth, sizeof(suziSmooth) / sizeof(suziSmooth[0]), GL_TRIANGLES, 0, sizeof(suziSmooth));
 }
 void App::createCameras()
 {
@@ -193,10 +189,28 @@ void App::createCameras()
 
 void App::createScenes()
 {
+	Light* light1 = new Light(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
+	Light* light2 = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
+	Light* light3 = new Light(glm::vec3(3.0f, 4.0f, 8.0f), glm::vec4(0.5f, 0.5f, 1.f, 1.0f));
 	//Transformation transformation;
 	scene1 = new Scene();
 	scene2 = new Scene();
+	scene3 = new Scene();
 	scene = new Scene();
+
+
+	scene1->setCamera(camera);
+	scene2->setCamera(camera);
+	scene3->setCamera(camera);
+
+	scene1->setLight(light1);
+	scene2->setLight(light2);
+	scene3->setLight(light3);
+
+	
+
+
+
 	scene->addObject(new DrawableObject(triangleModel, shader1));
 	
 	for (int i = 0; i < 100; i++) {
@@ -211,7 +225,7 @@ void App::createScenes()
 		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth)/100;
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		DrawableObject* drawableTree = new DrawableObject(treeModel, shaderWithLight);
+		DrawableObject* drawableTree = new DrawableObject(treeModel, shaderConstant);
 		Transformation transformation;
 
 		auto translate = std::make_shared<Translate>(x, 0.f, z);
@@ -237,7 +251,7 @@ void App::createScenes()
 		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth) / 100;
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		DrawableObject* drawableBush = new DrawableObject(bushModel, shaderWithLight);
+		DrawableObject* drawableBush = new DrawableObject(bushModel, shaderConstant);
 		Transformation transformation;
 
 		auto translate = std::make_shared<Translate>(x, 0.f, z);
@@ -256,34 +270,64 @@ void App::createScenes()
 	
 	
 
-	DrawableObject* drawableSphere1 = new DrawableObject(sphereModel, shaderWithLight1);
+	DrawableObject* drawableSphere1 = new DrawableObject(sphereModel, shaderPhong);
 	Transformation transformation1;
 	
-	transformation1.add(std::make_shared <Translate>(1.f, 1.f, 0.f));
+	transformation1.add(std::make_shared <Translate>(1.5f, 1.5f, 0.f));
 	drawableSphere1->setTransformation(transformation1);
 	scene2->addObject(drawableSphere1);
 
-	DrawableObject* drawableSphere2 = new DrawableObject(sphereModel, shaderWithLight1);
+	DrawableObject* drawableSphere2 = new DrawableObject(sphereModel, shaderPhong);
 	Transformation transformation2;
-	transformation2.add(std::make_shared <Translate>(-1.f, 1.f, 0.f));
+	transformation2.add(std::make_shared <Translate>(-1.5f, 1.5f, 0.f));
 	drawableSphere2->setTransformation(transformation2);
 	scene2->addObject(drawableSphere2);
 
-	DrawableObject* drawableSphere3 = new DrawableObject(sphereModel, shaderWithLight1);
+	DrawableObject* drawableSphere3 = new DrawableObject(sphereModel, shaderPhong);
 	Transformation transformation3;
-	transformation3.add(std::make_shared <Translate>(1.f, -1.f, 0.f));
+	transformation3.add(std::make_shared <Translate>(1.5f, -1.5f, 0.f));
 	drawableSphere3->setTransformation(transformation3);
 	scene2->addObject(drawableSphere3);
 
-	DrawableObject* drawableSphere4 = new DrawableObject(sphereModel, shaderWithLight1);
+	DrawableObject* drawableSphere4 = new DrawableObject(sphereModel, shaderPhong);
 	Transformation transformation4;
-	transformation4.add(std::make_shared <Translate>(-1.f, -1.f, 0.f));
+	transformation4.add(std::make_shared <Translate>(-1.5f, -1.5f, 0.f));
 	drawableSphere4->setTransformation(transformation4);
 	scene2->addObject(drawableSphere4);
 
+	
+
+	DrawableObject* drawableGift = new DrawableObject(giftModel, shaderPhong);
+	DrawableObject* drawableSuziSmooth = new DrawableObject(suziSmoothModel, shaderBlinn);
+	DrawableObject* drawableTree = new DrawableObject(treeModel, shaderConstant);
+	DrawableObject* drawableSphere = new DrawableObject(sphereModel, shaderLambert);
+	Transformation transformationGift;
+	Transformation transformationSuziSmooth;
+	Transformation transformationTree;
+	Transformation transformationSphere;
+	transformationGift.add(std::make_shared <Translate>(-3.f, -1.f, -4.f));
+	transformationGift.add(std::make_shared <Scale>(5.f, 5.f, 5.f));
+	transformationSuziSmooth.add(std::make_shared <Translate>(0.f, 0.f, -4.f));
+	transformationTree.add(std::make_shared <Translate>(6.f, -1.f, -4.f));
+	transformationSphere.add(std::make_shared <Translate>(3.f, 0.f, -4.f));
+	drawableGift->setTransformation(transformationGift);
+	drawableSuziSmooth->setTransformation(transformationSuziSmooth);
+	drawableTree->setTransformation(transformationTree);
+	drawableSphere->setTransformation(transformationSphere);
+
+	scene3->addObject(drawableGift);
+	scene3->addObject(drawableSuziSmooth);
+	scene3->addObject(drawableTree);
+	scene3->addObject(drawableSphere);
+
+
+	scene1->cameraInit();
+	scene2->cameraInit();
+	scene3->cameraInit();
 
 
 
+	
 	
 	
 }
@@ -316,10 +360,16 @@ void App::run()
 			scene->render();
 		}
 		if (sceneIndex == 1) {
+			scene1->lightInit();
 			scene1->render();
 		}
 		if (sceneIndex == 2) {
+			scene2->lightInit();
 			scene2->render();
+		}
+		if (sceneIndex == 3) {
+			scene3->lightInit();
+			scene3->render();
 		}
 		
 		
@@ -331,6 +381,9 @@ void App::run()
 		}
 		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
 			sceneIndex = 2;
+		}
+		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
+			sceneIndex = 3;
 		}
 		
 		
