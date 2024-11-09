@@ -9,7 +9,7 @@ uniform vec4 ambient = vec4(0.25f, 0.25f, 0.25f, 1.0f);
 uniform vec3 cameraPosition;
 uniform float specularStrength = 70.0f; 
 struct light{
-    vec4 position;
+    vec3 position;
     vec4 color;
 };
 
