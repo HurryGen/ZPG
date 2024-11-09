@@ -21,6 +21,7 @@ public:
 	void updateCameraVector();
 	glm::mat4 getProjection();
 	void updatePosition(float x, float y);
+	glm::vec3 getPosition();
 
 	void attach(Observer* observer) override;
 	void detach(Observer* observer) override;

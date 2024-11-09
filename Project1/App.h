@@ -8,6 +8,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Transformation.h"
+#include "TransformationComponent.h"
 #include "Light.h"
 
 //Include GLM  

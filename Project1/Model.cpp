@@ -3,25 +3,6 @@
 
 
 
-float points[] = {
-	 0.0f, 0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	-0.5f, -0.5f, 0.0f,
-
-	0.9f, 0.9f, 0.0f,
-	 0.9f, 0.6f, 0.0f,
-	0.6f, 0.6f, 0.0f,
-	0.6f, 0.9f, 0.0f,
-
-};
-
-const float a[] = {
-	 -.5f, -.5f, .5f,  0, 0, 1,
-	 -.5f, .5f, .5f,  0, 0, 1,
-	   .5f, .5f, .5f,  0, 0, 1,
-	   .5f, -.5f, .5f,  0, 0, 1 
-};
-
 Model::Model(const float* model, size_t vertexCount, GLuint mode, int first, int count): mode(mode), first(first), count(count) {
 	//vertex buffer object (VBO)
 	VBO = 0;

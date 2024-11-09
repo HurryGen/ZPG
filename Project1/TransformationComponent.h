@@ -5,6 +5,6 @@
 class TransformationComponent
 {
 public:
-	virtual glm::mat4 getMatrix() const = 0;
+	virtual glm::mat4 getMatrix() = 0;
 };
 

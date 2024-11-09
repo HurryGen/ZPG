@@ -15,7 +15,7 @@ class Transformation : public TransformationComponent
 {
 public:
 	void add(const std::shared_ptr<TransformationComponent>& transformation);
-	glm::mat4 getMatrix() const override;
+	glm::mat4 getMatrix() override;
 
 private:
 	std::vector<std::shared_ptr<TransformationComponent>> transformations;

@@ -4,6 +4,8 @@
 #include "../Models/gift.h"
 #include "../Models/sphere.h"
 #include "../Models/suzi_smooth.h"
+#include "DynamicRotate.h"
+#include "RandomTranslate.h"
 
 ShaderProgram* shader;
 ShaderProgram* shader1;
@@ -26,6 +28,7 @@ Model* suziSmoothModel;
 Scene* scene1;
 Scene* scene2;
 Scene* scene3;
+Scene* scene4;
 Scene* scene;
 Camera* camera;
 
@@ -189,23 +192,26 @@ void App::createCameras()
 
 void App::createScenes()
 {
-	Light* light1 = new Light(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
+	Light* light1 = new Light(glm::vec3(3.0f, 8.0f, 5.0f), glm::vec4(0.5f, 0.5f, 1.f, 1.0f));
 	Light* light2 = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
-	Light* light3 = new Light(glm::vec3(3.0f, 4.0f, 8.0f), glm::vec4(0.5f, 0.5f, 1.f, 1.0f));
+	Light* light3 = new Light(glm::vec3(3.0f, 2.0f, 8.0f), glm::vec4(0.5f, 0.5f, 1.f, 1.0f));
 	//Transformation transformation;
 	scene1 = new Scene();
 	scene2 = new Scene();
 	scene3 = new Scene();
+	scene4 = new Scene();
 	scene = new Scene();
 
 
 	scene1->setCamera(camera);
 	scene2->setCamera(camera);
 	scene3->setCamera(camera);
+	scene4->setCamera(camera);
 
 	scene1->setLight(light1);
 	scene2->setLight(light2);
 	scene3->setLight(light3);
+	scene4->setLight(light1);
 
 	
 
@@ -266,6 +272,27 @@ void App::createScenes()
 
 	}
 
+	for (int i = 0; i < 20; i++) {
+
+		DrawableObject* drawableSuziSmooth = new DrawableObject(suziSmoothModel, shaderBlinn);
+		Transformation transformation;
+		int upperBound = 20;
+		int lowerBound = -20;
+
+		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
+		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
+		auto translate = std::make_shared <RandomTranslate>(5.f, x, 0.0f, z);
+		translate->setBoundsX(-5.f, 5.f);
+		translate->setBoundsY(1.f, 5.f);
+		translate->setBoundsZ(-5.f, 5.f);
+		transformation.add(translate);
+		auto scale = std::make_shared<Scale>(0.2f, 0.2f, 0.2f);
+		transformation.add(scale);
+		drawableSuziSmooth->setTransformation(transformation);
+		
+		scene1->addObject(drawableSuziSmooth);
+	}
+
 
 	
 	
@@ -319,11 +346,25 @@ void App::createScenes()
 	scene3->addObject(drawableSuziSmooth);
 	scene3->addObject(drawableTree);
 	scene3->addObject(drawableSphere);
+	DrawableObject* drawableTreeRotate = new DrawableObject(treeModel, shaderBlinn);
+	Transformation transformationTreeRotate;
+	auto dynamicRotate = std::make_shared<DynamicRotate>(1.0f, 0.0f, 1.0f, 0.0f);
+	auto randomTranslate = std::make_shared <RandomTranslate>(5.f,0.0f, 0.0f, 0.0f);
+
+	transformationTreeRotate.add(randomTranslate);
+	transformationTreeRotate.add(dynamicRotate);
+	
+	
+	drawableTreeRotate->setTransformation(transformationTreeRotate);
+
+
+	scene4->addObject(drawableTreeRotate);
 
 
 	scene1->cameraInit();
 	scene2->cameraInit();
 	scene3->cameraInit();
+	scene4->cameraInit();
 
 
 
@@ -371,6 +412,10 @@ void App::run()
 			scene3->lightInit();
 			scene3->render();
 		}
+		if (sceneIndex == 4) {
+			scene4->lightInit();
+			scene4->render();	
+		}
 		
 		
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
@@ -384,6 +429,9 @@ void App::run()
 		}
 		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
 			sceneIndex = 3;
+		}
+		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
+			sceneIndex = 4;
 		}
 		
 		

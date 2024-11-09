@@ -17,8 +17,10 @@
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 #include "ShaderProgram.h"
 
+
 class ShaderProgram : public Observer
 {
+	
 public:
 	ShaderProgram(const char* vertexFilePath, const char* fragmentFilePath);
 	void setTransformation(Transformation &transformation);
@@ -33,6 +35,7 @@ private:
 	GLint idModelProjection;
 	GLint idLightColor;
 	GLint idLightPosition;
+	GLint idCameraPosition;
 };
 
 #endif

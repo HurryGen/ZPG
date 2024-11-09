@@ -85,6 +85,11 @@ void Camera::updatePosition(float x, float y)
 
 }
 
+glm::vec3 Camera::getPosition()
+{
+    return eye;
+}
+
 
 void Camera::attach(Observer* observer)
 {

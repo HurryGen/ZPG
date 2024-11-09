@@ -4,6 +4,7 @@ in vec3 fragNormal;
 out vec4 frag_colour;
 uniform vec4 lightColor;
 uniform vec3 lightPosition;
+uniform vec3 cameraPosition;
 
 
 void main() {

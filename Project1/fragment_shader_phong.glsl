@@ -6,15 +6,19 @@ out vec4 fragColor;
 uniform vec3 lightPosition;
 uniform vec4 lightColor;
 uniform vec4 ambient = vec4(0.25f, 0.25f, 0.25f, 1.0f);
-uniform vec3 viewDir = vec3(0.0f, 0.0f, 1.0f);
+uniform vec3 cameraPosition;
 uniform float specularStrength = 70.0f; 
+struct light{
+    vec4 position;
+    vec4 color;
+};
 
 void main(void)
 {
     vec3 normal = normalize(fragNormal);
     vec3 lightDir = normalize(lightPosition - fragPosition);
     
-   
+    vec3 viewDir = normalize(cameraPosition - fragPosition);
     float diffIntensity = max(dot(normal, lightDir), 0.0);
     
    
@@ -32,3 +36,6 @@ void main(void)
    
     fragColor = ambient + (diffuseColor + specularColor) * objectColor;
 }
+
+
+
