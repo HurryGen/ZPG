@@ -11,6 +11,7 @@ RandomTranslate::RandomTranslate(float speed, float x, float y, float z) : Trans
 	upperBoundZ = 1.f;
 	lastUpdateTime = 0.0f;
 	this->speed = speed;
+	translationOffset = glm::vec3(x, y, z);
 	
 }
 
@@ -27,7 +28,6 @@ glm::mat4 RandomTranslate::getMatrix()
 		lastUpdateTime = currentTime;
 	}
 	
-
 	return glm::translate(glm::mat4(1.0f), translationOffset);
 }
 

@@ -35,8 +35,6 @@ private:
 	GLint idModelTransform;
 	GLint idModelView;
 	GLint idModelProjection;
-	GLint idLightColor;
-	GLint idLightPosition;
 	GLint idCameraPosition;
 	std::vector<Light*> lights;
 	GLint idNumLights;

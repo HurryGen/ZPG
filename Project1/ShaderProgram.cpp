@@ -60,8 +60,7 @@ void ShaderProgram::loadLights()
     glUniform1i(idNumLights, lights.size());
     for (int i = 0; i < lights.size(); i++)
     {
-        idLightPosition = glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(i) + "].position").c_str());
-        idLightColor = glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(i) + "].color").c_str());
+        
         glUniform3fv(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(i) + "].position").c_str()), 1, glm::value_ptr(lights[i]->getPosition()));
         glUniform4fv(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(i) + "].color").c_str()), 1, glm::value_ptr(lights[i]->getColor()));
     }
