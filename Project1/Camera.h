@@ -22,6 +22,8 @@ public:
 	glm::mat4 getProjection();
 	void updatePosition(float x, float y);
 	glm::vec3 getPosition();
+	void setProjection(float fov, float aspect, float near, float far);
+	void updateAspect(float width, float height);
 
 	void attach(Observer* observer) override;
 	void detach(Observer* observer) override;
@@ -38,6 +40,8 @@ private:
 	float alpha;
 	float fi;
 	float movementSpeed;
+	float fov;
+	float aspect;
 	
 };
 

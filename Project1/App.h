@@ -40,6 +40,7 @@ public:
 
 private:
 	GLFWwindow* window;
+	bool lockMouse = false;
 };
 
 #endif

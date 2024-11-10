@@ -4,13 +4,16 @@
 
 Camera::Camera()
 {
-    projectionMat = glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+    aspect = 4.0f / 3.0f;
+    fov = 60.0f;
+    projectionMat = glm::perspective(glm::radians(fov), aspect, 0.1f, 100.0f);
     eye = glm::vec3(0.0f, 0.0f, 5.0f);
     target = glm::vec3(0.0f, 0.0f, -1.0f);
     up = glm::vec3(0.0f, 1.0f, 0.0f);
     movementSpeed = 0.1f;
     alpha = 0.f;
     fi = 0.f;
+    
 }
 
 glm::mat4 Camera::getCamera()
@@ -90,6 +93,22 @@ glm::vec3 Camera::getPosition()
     return eye;
 }
 
+void Camera::setProjection(float fov, float aspect, float near, float far)
+{
+    this->fov = fov;
+    this->aspect = aspect;
+    projectionMat = glm::perspective(glm::radians(fov), aspect, near, far);
+    notify();
+}
+
+void Camera::updateAspect(float width, float height)
+{
+    aspect = width / height;
+    setProjection(fov, aspect, 0.1f, 100.0f);
+}
+
+
+
 
 void Camera::attach(Observer* observer)
 {
@@ -103,7 +122,8 @@ void Camera::detach(Observer* observer)
 
 void Camera::notify()
 {
-    for (auto observer : observers) {
+    for (auto observer : observers)
+    {
         observer->update(this);
     }
 }

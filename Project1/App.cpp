@@ -46,8 +46,8 @@ void App::error_callback(int error, const char* description)
 
 void App::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
+	// if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	// 	glfwSetWindowShouldClose(window, GL_TRUE);
 	printf("key_callback [%d,%d,%d,%d] \n", key, scancode, action, mods);
 }
 
@@ -65,10 +65,15 @@ void App::window_size_callback(GLFWwindow* window, int width, int height)
 {
 	printf("resize %d, %d \n", width, height);
 	glViewport(0, 0, width, height);
+	camera->updateAspect(width, height);
 }
 
 void App::cursor_callback(GLFWwindow* window, double x, double y)
 {
+	if(lockMouse)
+	{
+		return;
+	}
 	printf("cursor_callback \n");
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
@@ -107,7 +112,7 @@ void App::initialization()
 	glfwWindowHint(GLFW_OPENGL_PROFILE,
 	GLFW_OPENGL_CORE_PROFILE);  //*/
 
-	window = glfwCreateWindow(1600, 1200, "ZPG", NULL, NULL);
+	window = glfwCreateWindow(800, 600, "ZPG", NULL, NULL);
 	if (!window) {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
@@ -395,6 +400,17 @@ void App::run()
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 			camera->moveRight();
 		}
+		if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
+			lockMouse = !lockMouse;
+			if(!lockMouse)
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+				
+			else
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+
+		
+		
 		
 
 		if (sceneIndex == 0) {
@@ -437,7 +453,7 @@ void App::run()
 		
 		// update other events like input handling
 		glfwPollEvents();
-		// put the stuff we’ve been drawing onto the display
+		// put the stuff weï¿½ve been drawing onto the display
 		glfwSwapBuffers(window);
 	}
 
