@@ -213,10 +213,12 @@ void App::createScenes()
 	scene3->setCamera(camera);
 	scene4->setCamera(camera);
 
-	scene1->setLight(light1);
-	scene2->setLight(light2);
-	scene3->setLight(light3);
-	scene4->setLight(light1);
+	scene1->addLight(light1);
+	scene2->addLight(light2);
+	scene3->addLight(light3);
+	//scene3->addLight(light1);
+	scene2->addLight(light1);
+	scene4->addLight(light1);
 
 	
 

@@ -20,8 +20,9 @@ ShaderProgram::ShaderProgram(const char* vertexFilePath, const char* fragmentFil
     idModelView = glGetUniformLocation(shaderProgram, "viewMatrix");
     idModelProjection = glGetUniformLocation(shaderProgram, "projectionMatrix");
     idCameraPosition = glGetUniformLocation(shaderProgram, "cameraPosition");
-    idLightColor = glGetUniformLocation(shaderProgram, "lightColor");
-    idLightPosition = glGetUniformLocation(shaderProgram, "lightPosition");
+    //idLightColor = glGetUniformLocation(shaderProgram, "lightColor");
+    //idLightPosition = glGetUniformLocation(shaderProgram, "lightPosition");
+    idNumLights = glGetUniformLocation(shaderProgram, "numLights");
 }
 
 void ShaderProgram::setTransformation(Transformation& transformation)
@@ -41,10 +42,28 @@ void ShaderProgram::update(Subject* subject)
         glUniform3fv(idCameraPosition, 1, glm::value_ptr(camera->getPosition()));
     }
 
-    if (auto light = dynamic_cast<Light*>(subject))
+    // if (auto light = dynamic_cast<Light*>(subject))
+    // {
+    //     glUniform3fv(idLightPosition, 1, glm::value_ptr(light->getPosition()));
+    //     glUniform4fv(idLightColor, 1, glm::value_ptr(light->getColor()));
+    // }
+}
+
+void ShaderProgram::addLights(std::vector<Light*> lights)
+{
+    this->lights = lights;
+}
+
+void ShaderProgram::loadLights()
+{
+    use();
+    glUniform1i(idNumLights, lights.size());
+    for (int i = 0; i < lights.size(); i++)
     {
-        glUniform3fv(idLightPosition, 1, glm::value_ptr(light->getPosition()));
-        glUniform4fv(idLightColor, 1, glm::value_ptr(light->getColor()));
+        idLightPosition = glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(i) + "].position").c_str());
+        idLightColor = glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(i) + "].color").c_str());
+        glUniform3fv(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(i) + "].position").c_str()), 1, glm::value_ptr(lights[i]->getPosition()));
+        glUniform4fv(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(i) + "].color").c_str()), 1, glm::value_ptr(lights[i]->getColor()));
     }
 }
 

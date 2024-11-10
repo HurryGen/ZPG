@@ -3,39 +3,45 @@ in vec3 fragPosition;
 in vec3 fragNormal;
 out vec4 fragColor;
 
-uniform vec3 lightPosition;
-uniform vec4 lightColor;
-uniform vec4 ambient = vec4(0.25f, 0.25f, 0.25f, 1.0f);
+uniform vec4 ambient = vec4(0.25, 0.25, 0.25, 1.0);
 uniform vec3 cameraPosition;
-uniform float specularStrength = 70.0f; 
-struct light{
+uniform float specularStrength = 70.0;
+
+
+struct Light {
     vec3 position;
     vec4 color;
 };
 
+uniform int numLights;
+uniform Light lights[100];
+
 void main(void)
 {
     vec3 normal = normalize(fragNormal);
-    vec3 lightDir = normalize(lightPosition - fragPosition);
-    
     vec3 viewDir = normalize(cameraPosition - fragPosition);
-    float diffIntensity = max(dot(normal, lightDir), 0.0);
-    
-   
-    float spec = 0.0;
-    if (diffIntensity > 0.0) {
-        vec3 reflectDir = reflect(-lightDir, normal);
-        spec = pow(max(dot(normalize(viewDir), reflectDir), 0.0), 32.0);
-    }
 
     vec4 objectColor = vec4(0.8, 0.8, 0.8, 1.0);
+    vec4 totalDiffuse = vec4(0.0);
+    vec4 totalSpecular = vec4(0.0);
 
-    vec4 diffuseColor = diffIntensity * lightColor;
-    vec4 specularColor = specularStrength * spec * lightColor;
+    for (int i = 0; i < numLights; ++i) {
+        vec3 lightDir = normalize(lights[i].position - fragPosition);
 
-   
-    fragColor = ambient + (diffuseColor + specularColor) * objectColor;
+
+        float diffIntensity = max(dot(normal, lightDir), 0.0);
+        vec4 diffuseColor = diffIntensity * lights[i].color;
+        totalDiffuse += diffuseColor;
+
+
+        if (diffIntensity > 0.0) {
+            vec3 reflectDir = reflect(-lightDir, normal);
+            float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
+            vec4 specularColor = specularStrength * spec * lights[i].color;
+            totalSpecular += specularColor;
+        }
+    }
+
+
+    fragColor = ambient + (totalDiffuse + totalSpecular) * objectColor;
 }
-
-
-

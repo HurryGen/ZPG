@@ -31,9 +31,19 @@ void Scene::setCamera(Camera* camera)
 	this->camera = camera;
 }
 
-void Scene::setLight(Light* light)
+// void Scene::setLight(Light* light)
+// {
+// 	this->light = light;
+// }
+
+void Scene::addLight(Light* light)
 {
-	this->light = light;
+	lights.push_back(light);
+}
+
+void Scene::removeLight(Light* light)
+{
+	lights.erase(std::remove(lights.begin(), lights.end(), light), lights.end());
 }
 
 void Scene::cameraInit()
@@ -47,9 +57,10 @@ void Scene::cameraInit()
 void Scene::lightInit()
 {
 	for (ShaderProgram* shader : shaders) {
-		light->attach(shader);
+		shader->addLights(lights);
+		shader->loadLights();
 	}
-	light->notify();
+	
 }
 
 

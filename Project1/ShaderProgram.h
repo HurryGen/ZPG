@@ -25,6 +25,8 @@ public:
 	ShaderProgram(const char* vertexFilePath, const char* fragmentFilePath);
 	void setTransformation(Transformation &transformation);
 	void update(Subject* subject) override;
+	void addLights(std::vector<Light*> lights);
+	void loadLights();
 	void use();
 
 private:
@@ -36,6 +38,8 @@ private:
 	GLint idLightColor;
 	GLint idLightPosition;
 	GLint idCameraPosition;
+	std::vector<Light*> lights;
+	GLint idNumLights;
 };
 
 #endif
