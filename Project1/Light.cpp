@@ -1,7 +1,19 @@
 #include "Light.h"
 
+#include "Camera.h"
+
 Light::Light(const glm::vec3& position, const glm::vec4& color) : position(position), color(color)
 {
+	mode = 0;
+}
+
+Light::Light(const glm::vec3& position, const glm::vec4& color, glm::vec3 lightDirection, float cutoff)
+{
+	this->position = position;
+	this->color = color;
+	this->lightDirection = lightDirection;
+	this->cutoff = cutoff;
+	this->mode = 1;
 }
 
 void Light::attach(Observer* observer)
@@ -29,4 +41,29 @@ glm::vec3 Light::getPosition()
 glm::vec4 Light::getColor()
 {
 	return color;
+}
+
+void Light::update(Subject* subject)
+{
+	if(auto camera = dynamic_cast<Camera*>(subject))
+	{
+		lightDirection = camera->getTarget();
+		position = camera->getPosition();
+	}
+	notify();
+}
+
+int Light::getMode()
+{
+	return mode;
+}
+
+float Light::getCutoff()
+{
+	return cutoff;
+}
+
+glm::vec3 Light::getLightDirection()
+{
+	return lightDirection;
 }

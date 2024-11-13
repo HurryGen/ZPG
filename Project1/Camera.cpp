@@ -107,7 +107,10 @@ void Camera::updateAspect(float width, float height)
     setProjection(fov, aspect, 0.1f, 100.0f);
 }
 
-
+glm::vec3 Camera::getTarget()
+{
+    return target;
+}
 
 
 void Camera::attach(Observer* observer)

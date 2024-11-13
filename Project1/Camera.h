@@ -24,6 +24,7 @@ public:
 	glm::vec3 getPosition();
 	void setProjection(float fov, float aspect, float near, float far);
 	void updateAspect(float width, float height);
+	glm::vec3 getTarget();
 
 	void attach(Observer* observer) override;
 	void detach(Observer* observer) override;

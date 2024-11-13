@@ -4,6 +4,7 @@
 #include "../Models/gift.h"
 #include "../Models/sphere.h"
 #include "../Models/suzi_smooth.h"
+#include "../Models/plain.h"
 #include "DynamicRotate.h"
 #include "RandomTranslate.h"
 
@@ -24,6 +25,7 @@ Model* giftModel;
 Model* triangleModel;
 Model* sphereModel;
 Model* suziSmoothModel;
+Model* plainModel;
 
 Scene* scene1;
 Scene* scene2;
@@ -148,7 +150,7 @@ void App::initialization()
 	glfwSetWindowSizeCallback(window, window_size_callback);
 	
 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	glfwSetCursorPos(window, width / 2, height / 2);
 	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
 		App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
@@ -189,6 +191,8 @@ void App::createModels()
 	triangleModel = new Model(points, sizeof(points) / sizeof(points[0]), GL_TRIANGLES, 0, 3);
 	sphereModel = new Model(sphere, sizeof(sphere) / sizeof(sphere[0]), GL_TRIANGLES, 0, sizeof(sphere));
 	suziSmoothModel = new Model(suziSmooth, sizeof(suziSmooth) / sizeof(suziSmooth[0]), GL_TRIANGLES, 0, sizeof(suziSmooth));
+	plainModel = new Model(plain, sizeof(plain) / sizeof(plain[0]), GL_TRIANGLES, 0, sizeof(plain));
+	
 }
 void App::createCameras()
 {
@@ -197,7 +201,7 @@ void App::createCameras()
 
 void App::createScenes()
 {
-	Light* light1 = new Light(glm::vec3(3.0f, 8.0f, 5.0f), glm::vec4(0.5f, 0.5f, 1.f, 1.0f));
+	Light* light1 = new Light(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec4(0.5f, 0.5f, 1.f, 1.0f), glm::vec3(0.05f, -1.0f, 0.0f), 25.f);
 	Light* light2 = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
 	Light* light3 = new Light(glm::vec3(3.0f, 2.0f, 8.0f), glm::vec4(0.5f, 0.5f, 1.f, 1.0f));
 	//Transformation transformation;
@@ -212,19 +216,27 @@ void App::createScenes()
 	scene2->setCamera(camera);
 	scene3->setCamera(camera);
 	scene4->setCamera(camera);
+	camera->attach(light1);
 
 	scene1->addLight(light1);
 	scene2->addLight(light2);
 	scene3->addLight(light3);
 	//scene3->addLight(light1);
-	scene2->addLight(light1);
-	scene4->addLight(light1);
+	//scene2->addLight(light1);
+	//scene4->addLight(light1);
 
 	
 
 
 
 	scene->addObject(new DrawableObject(triangleModel, shader1));
+
+	DrawableObject* drawablePlain = new DrawableObject(plainModel, shaderPhong);
+	Transformation transformationPlain;
+	transformationPlain.add(std::make_shared <Translate>(0.f, 0.f, 0.f));
+	transformationPlain.add(std::make_shared <Scale>(50.f, 50.f, 50.f));
+	drawablePlain->setTransformation(transformationPlain);
+	scene1->addObject(drawablePlain);
 	
 	for (int i = 0; i < 100; i++) {
 		std::srand(static_cast<unsigned int>(6646545+i*1000000));
@@ -238,11 +250,14 @@ void App::createScenes()
 		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth)/100;
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		DrawableObject* drawableTree = new DrawableObject(treeModel, shaderConstant);
+		DrawableObject* drawableTree = new DrawableObject(treeModel, shaderPhong);
 		Transformation transformation;
 
+		auto autoRotate = std::make_shared<DynamicRotate>(1.f,0.f, 1.f, 0.f);
+		
 		auto translate = std::make_shared<Translate>(x, 0.f, z);
 		transformation.add(translate);
+		transformation.add(autoRotate);
 		auto rotate = std::make_shared<Rotate>(randAngle, 0.0f, 1.0f, 0.0f);
 		transformation.add(rotate);
 		auto scale = std::make_shared<Scale>(0.5f * heigth, 0.5f * heigth, 0.5f * heigth);
@@ -264,7 +279,7 @@ void App::createScenes()
 		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth) / 100;
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		DrawableObject* drawableBush = new DrawableObject(bushModel, shaderConstant);
+		DrawableObject* drawableBush = new DrawableObject(bushModel, shaderPhong);
 		Transformation transformation;
 
 		auto translate = std::make_shared<Translate>(x, 0.f, z);
@@ -281,7 +296,7 @@ void App::createScenes()
 
 	for (int i = 0; i < 20; i++) {
 
-		DrawableObject* drawableSuziSmooth = new DrawableObject(suziSmoothModel, shaderBlinn);
+		DrawableObject* drawableSuziSmooth = new DrawableObject(suziSmoothModel, shaderPhong);
 		Transformation transformation;
 		int upperBound = 20;
 		int lowerBound = -20;
@@ -402,13 +417,11 @@ void App::run()
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 			camera->moveRight();
 		}
-		if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
-			lockMouse = !lockMouse;
-			if(!lockMouse)
-				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-				
-			else
-				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE){
+			lockMouse = true;
+		}
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+			lockMouse = false;
 		}
 
 		
