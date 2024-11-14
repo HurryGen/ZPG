@@ -33,6 +33,8 @@ void Light::notify()
 	}
 }
 
+
+
 glm::vec3 Light::getPosition()
 {
 	return position;
@@ -51,7 +53,9 @@ void Light::update(Subject* subject)
 		position = camera->getPosition();
 	}
 	notify();
+	
 }
+
 
 int Light::getMode()
 {
@@ -66,4 +70,14 @@ float Light::getCutoff()
 glm::vec3 Light::getLightDirection()
 {
 	return lightDirection;
+}
+
+void Light::setId(int id)
+{
+	this->id = id;
+}
+
+int Light::getId()
+{
+	return id;
 }

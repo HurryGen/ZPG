@@ -199,6 +199,8 @@ void App::createCameras()
 	camera = new Camera();
 }
 
+
+
 void App::createScenes()
 {
 	Light* light1 = new Light(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec4(0.5f, 0.5f, 1.f, 1.0f), glm::vec3(0.05f, -1.0f, 0.0f), 25.f);
@@ -212,22 +214,35 @@ void App::createScenes()
 	scene = new Scene();
 
 
+	
+
 	scene1->setCamera(camera);
 	scene2->setCamera(camera);
 	scene3->setCamera(camera);
 	scene4->setCamera(camera);
 	camera->attach(light1);
 
+
 	scene1->addLight(light1);
+	scene1->addLight(light3);
 	scene2->addLight(light2);
 	scene3->addLight(light3);
-	//scene3->addLight(light1);
-	//scene2->addLight(light1);
-	//scene4->addLight(light1);
-
+	scene3->addLight(light1);
+	scene2->addLight(light1);
+	scene4->addLight(light1);
 	
-
-
+	light1->attach(shaderPhong);
+	light1->attach(shaderBlinn);
+	light1->attach(shaderLambert);
+	light1->attach(shaderConstant);
+	light2->attach(shaderPhong);
+	light2->attach(shaderBlinn);
+	light2->attach(shaderLambert);
+	light2->attach(shaderConstant);
+	light3->attach(shaderPhong);
+	light3->attach(shaderBlinn);
+	light3->attach(shaderLambert);
+	light3->attach(shaderConstant);
 
 	scene->addObject(new DrawableObject(triangleModel, shader1));
 
@@ -382,11 +397,20 @@ void App::createScenes()
 
 	scene4->addObject(drawableTreeRotate);
 
-
+	
+	
 	scene1->cameraInit();
 	scene2->cameraInit();
 	scene3->cameraInit();
 	scene4->cameraInit();
+
+
+
+	
+
+	
+	
+	
 
 
 
@@ -432,19 +456,15 @@ void App::run()
 			scene->render();
 		}
 		if (sceneIndex == 1) {
-			scene1->lightInit();
 			scene1->render();
 		}
 		if (sceneIndex == 2) {
-			scene2->lightInit();
 			scene2->render();
 		}
 		if (sceneIndex == 3) {
-			scene3->lightInit();
 			scene3->render();
 		}
 		if (sceneIndex == 4) {
-			scene4->lightInit();
 			scene4->render();	
 		}
 		
@@ -453,15 +473,19 @@ void App::run()
 			sceneIndex = 0;
 		}
 		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+			scene1->lightsInit();
 			sceneIndex = 1;
 		}
 		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+			scene2->lightsInit();
 			sceneIndex = 2;
 		}
 		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
+			scene3->lightsInit();
 			sceneIndex = 3;
 		}
 		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
+			scene4->lightsInit();
 			sceneIndex = 4;
 		}
 		

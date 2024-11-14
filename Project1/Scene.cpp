@@ -54,11 +54,15 @@ void Scene::cameraInit()
 	camera->notify();
 }
 
-void Scene::lightInit()
+void Scene::lightsInit()
 {
 	for (ShaderProgram* shader : shaders) {
-		shader->addLights(lights);
-		shader->loadLights();
+		shader->setNumberOfLights(lights.size());
+	}
+	for(int i = 0; i < lights.size(); i++)
+	{
+		lights[i]->setId(i);
+		lights[i]->notify();
 	}
 	
 }

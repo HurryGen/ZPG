@@ -41,32 +41,22 @@ void ShaderProgram::update(Subject* subject)
         glUniformMatrix4fv(idModelProjection, 1, GL_FALSE, glm::value_ptr(camera->getProjection()));
         glUniform3fv(idCameraPosition, 1, glm::value_ptr(camera->getPosition()));
     }
-
     if (auto light = dynamic_cast<Light*>(subject))
     {
-        loadLights();
+        glUniform3fv(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(light->getId()) + "].position").c_str()), 1, glm::value_ptr(light->getPosition()));
+        glUniform4fv(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(light->getId()) + "].color").c_str()), 1, glm::value_ptr(light->getColor()));
+        glUniform1i(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(light->getId()) + "].mode").c_str()), light->getMode());
+        glUniform3fv(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(light->getId()) + "].spotDir").c_str()), 1, glm::value_ptr(light->getLightDirection()));
+        glUniform1f(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(light->getId()) + "].cutoff").c_str()), light->getCutoff());
     }
 }
 
-void ShaderProgram::addLights(std::vector<Light*> lights)
-{
-    this->lights = lights;
-}
-
-void ShaderProgram::loadLights()
+void ShaderProgram::setNumberOfLights(int numLights)
 {
     use();
-    glUniform1i(idNumLights, lights.size());
-    for (int i = 0; i < lights.size(); i++)
-    {
-        
-        glUniform3fv(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(i) + "].position").c_str()), 1, glm::value_ptr(lights[i]->getPosition()));
-        glUniform4fv(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(i) + "].color").c_str()), 1, glm::value_ptr(lights[i]->getColor()));
-        glUniform1i(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(i) + "].mode").c_str()), lights[i]->getMode());
-        glUniform3fv(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(i) + "].spotDir").c_str()), 1, glm::value_ptr(lights[i]->getLightDirection()));
-        glUniform1f(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(i) + "].cutoff").c_str()), lights[i]->getCutoff());
-    }
+    glUniform1i(idNumLights, numLights);
 }
+
 
 void ShaderProgram::use()
 {

@@ -19,8 +19,10 @@ public:
 	int getMode();
 	float getCutoff();
 	glm::vec3 getLightDirection();
+	void setId(int id);
+	int getId();
 
-
+	
 private:
 	glm::vec3 position;  
 	glm::vec4 color; 
@@ -28,5 +30,6 @@ private:
 	glm::vec3 lightDirection;
 	float cutoff;
 	int mode;
+	int id;
 };
 

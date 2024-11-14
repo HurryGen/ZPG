@@ -14,14 +14,14 @@ public:
 	void addLight(Light* light);
 	void removeLight(Light* light);
 	void cameraInit();
-	void lightInit();
+	void lightsInit();
 	std::vector<DrawableObject*> getObjects();
 
 private:
 	std::vector<DrawableObject*> objects;
 	std::vector<ShaderProgram*> shaders;
 	Camera* camera;
-	Light* light;
+	//Light* light;
 	std::vector<Light*> lights;
 
 };
