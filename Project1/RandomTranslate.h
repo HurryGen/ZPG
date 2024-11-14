@@ -19,5 +19,6 @@ private:
 	float lastUpdateTime;
 	float speed;
 	glm::vec3 translationOffset;
+	glm::vec3 startPosition;
 };
 
