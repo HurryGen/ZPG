@@ -23,7 +23,7 @@ public:
 	int getId();
 
 	
-private:
+protected:
 	glm::vec3 position;  
 	glm::vec4 color; 
 	std::vector<Observer*> observers;

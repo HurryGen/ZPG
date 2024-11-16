@@ -132,6 +132,8 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Drawable.cpp" />
+    <ClCompile Include="DrawableLight.cpp" />
     <ClCompile Include="DrawableObject.cpp" />
     <None Include="fragment_shader_camera.glsl">
       <FileType>Document</FileType>
@@ -166,6 +168,8 @@
     <ClInclude Include="..\Models\sphere.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Drawable.h" />
+    <ClInclude Include="DrawableLight.h" />
     <ClInclude Include="DrawableObject.h" />
     <ClInclude Include="DynamicRotate.h" />
     <ClInclude Include="Light.h" />
@@ -185,6 +189,9 @@
   <ItemGroup>
     <None Include="fragment_shader.glsl" />
     <None Include="vertex_shader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fragment_shader_drawable_light.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,8 +18,7 @@ void main() {
     for (int i = 0; i < numLights; ++i) {
         vec3 lightDir = normalize(lights[i].position - fragNormal);
         float diff = max(dot(normal, lightDir), 0.0);
-
-        // Accumulate each light's diffuse contribution
+        
         totalDiffuse += lights[i].color * diff;
     }
 

@@ -1,4 +1,6 @@
 #include "App.h"
+
+#include "DrawableLight.h"
 #include "../Models/tree.h"
 #include "../Models/bushes.h"
 #include "../Models/gift.h"
@@ -16,6 +18,7 @@ ShaderProgram* shaderPhong;
 ShaderProgram* shaderBlinn;
 ShaderProgram* shaderLambert;
 ShaderProgram* shaderConstant;
+ShaderProgram* shaderDrawableLight;
 
 
 
@@ -174,6 +177,7 @@ void App::createShaders()
 	shaderBlinn = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_blinn.glsl");
 	shaderLambert = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_lambert.glsl");
 	shaderConstant = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_light.glsl");
+	shaderDrawableLight = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_drawable_light.glsl");
 
 }
 
@@ -206,6 +210,7 @@ void App::createScenes()
 	Light* light1 = new Light(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec4(0.5f, 0.5f, 1.f, 1.0f), glm::vec3(0.05f, -1.0f, 0.0f), 25.f);
 	Light* light2 = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
 	Light* light3 = new Light(glm::vec3(3.0f, 2.0f, 8.0f), glm::vec4(0.5f, 0.5f, 1.f, 1.0f));
+	
 	//Transformation transformation;
 	scene1 = new Scene();
 	scene2 = new Scene();
@@ -225,6 +230,7 @@ void App::createScenes()
 
 	scene1->addLight(light1);
 	scene1->addLight(light3);
+	
 	scene2->addLight(light2);
 	scene3->addLight(light3);
 	scene3->addLight(light1);
@@ -243,6 +249,8 @@ void App::createScenes()
 	light3->attach(shaderBlinn);
 	light3->attach(shaderLambert);
 	light3->attach(shaderConstant);
+	
+	
 
 	scene->addObject(new DrawableObject(triangleModel, shader1));
 
@@ -294,7 +302,7 @@ void App::createScenes()
 		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth) / 100;
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		DrawableObject* drawableBush = new DrawableObject(bushModel, shaderPhong);
+		DrawableObject* drawableBush = new DrawableObject(bushModel, shaderLambert);
 		Transformation transformation;
 
 		auto translate = std::make_shared<Translate>(x, 0.f, z);
@@ -309,15 +317,24 @@ void App::createScenes()
 
 	}
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 5; i++) {
+		
 
-		DrawableObject* drawableSuziSmooth = new DrawableObject(suziSmoothModel, shaderPhong);
+		//DrawableObject* drawableSuziSmooth = new DrawableObject(suziSmoothModel, shaderPhong);
 		Transformation transformation;
 		int upperBound = 20;
 		int lowerBound = -20;
 
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
+		Light* light = new Light(glm::vec3( x, 0.0f, z), glm::vec4(0.4f, 0.0f, 0.2f, 1.0f));
+		DrawableLight* drawableLight = new DrawableLight(sphereModel, shaderDrawableLight, light);
+		drawableLight->attach(shaderPhong);
+		drawableLight->attach(shaderBlinn);
+		drawableLight->attach(shaderLambert);
+		drawableLight->attach(shaderConstant);
+		drawableLight->attach(shaderDrawableLight);
+		scene1->addLight(drawableLight);
 		auto translate = std::make_shared <RandomTranslate>(5.f, x, 0.0f, z);
 		translate->setBoundsX(-5.f, 5.f);
 		translate->setBoundsY(1.f, 5.f);
@@ -325,9 +342,9 @@ void App::createScenes()
 		transformation.add(translate);
 		auto scale = std::make_shared<Scale>(0.2f, 0.2f, 0.2f);
 		transformation.add(scale);
-		drawableSuziSmooth->setTransformation(transformation);
+		drawableLight->setTransformation(transformation);
 		
-		scene1->addObject(drawableSuziSmooth);
+		scene1->addObject(drawableLight);
 	}
 
 
