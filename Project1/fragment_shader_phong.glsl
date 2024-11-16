@@ -19,6 +19,11 @@ struct Light {
 uniform int numLights;
 uniform Light lights[100];
 
+float attenuation(float c, float l, float q, float dist) {
+    float att = 1.0 / (c + l * dist + q * dist * dist);
+    return clamp(att, 0.0, 1.0);
+}
+
 void main(void)
 {
     vec3 normal = normalize(fragNormal);
@@ -30,19 +35,21 @@ void main(void)
 
     for (int i = 0; i < numLights; ++i) {
         vec3 lightDir = normalize(lights[i].position - fragPosition);
+        float distance = length(lights[i].position - fragPosition);
+        float att = attenuation(1.0, 0.018, 0.005, distance);
 
 
         if (lights[i].mode == 0) {
             float diffIntensity = max(dot(normal, lightDir), 0.0);
             vec4 diffuseColor = diffIntensity * lights[i].color;
-            totalDiffuse += diffuseColor;
+            totalDiffuse += diffuseColor * att;
 
 
             if (diffIntensity > 0.0) {
                 vec3 reflectDir = reflect(-lightDir, normal);
                 float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
                 vec4 specularColor = specularStrength * spec * lights[i].color;
-                totalSpecular += specularColor;
+                totalSpecular += specularColor * att;
             }
         }else if(lights[i].mode == 1){
             
@@ -57,14 +64,14 @@ void main(void)
                 
                 float intense = (theta - cutoff) / (1.0 - cutoff);
                 intense = clamp(intense, 0.0, 1.0);
-                totalDiffuse += diffuseColor * intense;
+                totalDiffuse += diffuseColor * intense * att;
 
                 
                 if (diffIntensity > 0.0) {
                     vec3 reflectDir = reflect(-lightDir, normal);
                     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
                     vec4 specularColor = specularStrength * spec * lights[i].color;
-                    totalSpecular += specularColor;
+                    totalSpecular += specularColor * att * intense;
                 }
             }
            
@@ -75,3 +82,4 @@ void main(void)
 
     fragColor = ambient + (totalDiffuse + totalSpecular) * objectColor;
 }
+
