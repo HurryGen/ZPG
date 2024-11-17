@@ -31,11 +31,6 @@ void Scene::setCamera(Camera* camera)
 	this->camera = camera;
 }
 
-// void Scene::setLight(Light* light)
-// {
-// 	this->light = light;
-// }
-
 void Scene::addLight(Light* light)
 {
 	lights.push_back(light);

@@ -3,7 +3,7 @@ in vec3 fragPosition;
 in vec3 fragNormal;
 out vec4 fragColor;
 
-uniform vec4 ambient = vec4(0.0, 0.0, 0.0, 1.0);
+uniform vec4 ambient = vec4(0.0, 0.0, 0.0, 0.0);
 uniform vec3 cameraPosition;
 uniform float specularStrength = 70.0;
 
@@ -15,6 +15,14 @@ struct Light {
     float cutoff;
     int mode;
 };
+
+struct Material {
+    vec3 ra;
+    vec3 rd;
+    vec3 rs;
+};
+
+uniform Material material;
 
 uniform int numLights;
 uniform Light lights[100];
@@ -41,14 +49,14 @@ void main(void)
 
         if (lights[i].mode == 0) {
             float diffIntensity = max(dot(normal, lightDir), 0.0);
-            vec4 diffuseColor = diffIntensity * lights[i].color;
+            vec4 diffuseColor = diffIntensity * lights[i].color * vec4(material.rd, 1.0);
             totalDiffuse += diffuseColor * att;
 
 
             if (diffIntensity > 0.0) {
                 vec3 reflectDir = reflect(-lightDir, normal);
                 float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
-                vec4 specularColor = specularStrength * spec * lights[i].color;
+                vec4 specularColor = specularStrength * spec * lights[i].color * vec4(material.rs, 1.0);
                 totalSpecular += specularColor * att;
             }
         }else if(lights[i].mode == 1){
@@ -60,7 +68,7 @@ void main(void)
             if (theta > cutoff) {
                
                 float diffIntensity = max(dot(normal, lightDir), 0.0);
-                vec4 diffuseColor = diffIntensity * lights[i].color;
+                vec4 diffuseColor = diffIntensity * lights[i].color * vec4(material.rd, 1.0);
                 
                 float intense = (theta - cutoff) / (1.0 - cutoff);
                 intense = clamp(intense, 0.0, 1.0);
@@ -70,16 +78,30 @@ void main(void)
                 if (diffIntensity > 0.0) {
                     vec3 reflectDir = reflect(-lightDir, normal);
                     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
-                    vec4 specularColor = specularStrength * spec * lights[i].color;
+                    vec4 specularColor = specularStrength * spec * lights[i].color * vec4(material.rs, 1.0);
                     totalSpecular += specularColor * att * intense;
                 }
             }
            
+        } else if(lights[i].mode == 2){
+            lightDir = normalize(-lights[i].spotDir);
+            float diffIntensity = max(dot(normal, lightDir), 0.0);
+            vec4 diffuseColor = diffIntensity * lights[i].color * vec4(material.rd, 1.0);
+            totalDiffuse += diffuseColor;
+
+
+            if (diffIntensity > 0.0) {
+                vec3 reflectDir = reflect(-lightDir, normal);
+                float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
+                vec4 specularColor = specularStrength * spec * lights[i].color * vec4(material.rs, 1.0);
+                totalSpecular += specularColor;
+            }
         }
+            
            
     }
-
-
-    fragColor = ambient + (totalDiffuse + totalSpecular) * objectColor;
+    
+    vec4 ambientColor = vec4(material.ra, 1.0)* ambient;
+    fragColor = ambientColor + (totalDiffuse + totalSpecular) * objectColor;
 }
 

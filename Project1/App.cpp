@@ -209,7 +209,11 @@ void App::createScenes()
 {
 	Light* light1 = new Light(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec4(0.5f, 0.5f, 1.f, 1.0f), glm::vec3(0.05f, -1.0f, 0.0f), 25.f);
 	Light* light2 = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
-	Light* light3 = new Light(glm::vec3(3.0f, 2.0f, 8.0f), glm::vec4(0.5f, 0.5f, 1.f, 1.0f));
+	Light* light3 = new Light(glm::vec3(3.0f, 2.0f, 8.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
+	Light* directionLight = new Light(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	Material* matteMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 0.0f));
+	Material* shinyMaterial = new Material(glm::vec3(0.3f, 0.3f, 0.3f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f));
+	Material* glowingMaterial = new Material(glm::vec3(0.5f, 0.5f, 0.2f), glm::vec3(0.9f, 0.9f, 0.5f), glm::vec3(2.0f, 2.0f, 1.0f));
 	
 	//Transformation transformation;
 	scene1 = new Scene();
@@ -232,6 +236,7 @@ void App::createScenes()
 	scene1->addLight(light3);
 	
 	scene2->addLight(light2);
+	scene2->addLight(directionLight);
 	scene3->addLight(light3);
 	scene3->addLight(light1);
 	scene2->addLight(light1);
@@ -249,12 +254,17 @@ void App::createScenes()
 	light3->attach(shaderBlinn);
 	light3->attach(shaderLambert);
 	light3->attach(shaderConstant);
+	directionLight->attach(shaderPhong);
+	directionLight->attach(shaderBlinn);
+	directionLight->attach(shaderLambert);
+	directionLight->attach(shaderConstant);
+	
 	
 	
 
-	scene->addObject(new DrawableObject(triangleModel, shader1));
+	scene->addObject(new DrawableObject(triangleModel, shader1,glowingMaterial));
 
-	DrawableObject* drawablePlain = new DrawableObject(plainModel, shaderPhong);
+	DrawableObject* drawablePlain = new DrawableObject(plainModel, shaderLambert ,glowingMaterial);
 	Transformation transformationPlain;
 	transformationPlain.add(std::make_shared <Translate>(0.f, 0.f, 0.f));
 	transformationPlain.add(std::make_shared <Scale>(50.f, 50.f, 50.f));
@@ -273,7 +283,7 @@ void App::createScenes()
 		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth)/100;
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		DrawableObject* drawableTree = new DrawableObject(treeModel, shaderPhong);
+		DrawableObject* drawableTree = new DrawableObject(treeModel, shaderPhong, glowingMaterial);
 		Transformation transformation;
 
 		auto autoRotate = std::make_shared<DynamicRotate>(1.f,0.f, 1.f, 0.f);
@@ -302,7 +312,7 @@ void App::createScenes()
 		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth) / 100;
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		DrawableObject* drawableBush = new DrawableObject(bushModel, shaderLambert);
+		DrawableObject* drawableBush = new DrawableObject(bushModel, shaderLambert, glowingMaterial);
 		Transformation transformation;
 
 		auto translate = std::make_shared<Translate>(x, 0.f, z);
@@ -327,8 +337,8 @@ void App::createScenes()
 
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		Light* light = new Light(glm::vec3( x, 0.0f, z), glm::vec4(0.4f, 0.0f, 0.2f, 1.0f));
-		DrawableLight* drawableLight = new DrawableLight(sphereModel, shaderDrawableLight, light);
+		Light* light = new Light(glm::vec3( x, 0.0f, z), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
+		DrawableLight* drawableLight = new DrawableLight(sphereModel, shaderDrawableLight, glowingMaterial,light);
 		drawableLight->attach(shaderPhong);
 		drawableLight->attach(shaderBlinn);
 		drawableLight->attach(shaderLambert);
@@ -351,26 +361,26 @@ void App::createScenes()
 	
 	
 
-	DrawableObject* drawableSphere1 = new DrawableObject(sphereModel, shaderPhong);
+	DrawableObject* drawableSphere1 = new DrawableObject(sphereModel, shaderPhong,glowingMaterial);
 	Transformation transformation1;
 	
 	transformation1.add(std::make_shared <Translate>(1.5f, 1.5f, 0.f));
 	drawableSphere1->setTransformation(transformation1);
 	scene2->addObject(drawableSphere1);
 
-	DrawableObject* drawableSphere2 = new DrawableObject(sphereModel, shaderPhong);
+	DrawableObject* drawableSphere2 = new DrawableObject(sphereModel, shaderLambert,shinyMaterial);
 	Transformation transformation2;
 	transformation2.add(std::make_shared <Translate>(-1.5f, 1.5f, 0.f));
 	drawableSphere2->setTransformation(transformation2);
 	scene2->addObject(drawableSphere2);
 
-	DrawableObject* drawableSphere3 = new DrawableObject(sphereModel, shaderPhong);
+	DrawableObject* drawableSphere3 = new DrawableObject(sphereModel, shaderBlinn,matteMaterial);
 	Transformation transformation3;
 	transformation3.add(std::make_shared <Translate>(1.5f, -1.5f, 0.f));
 	drawableSphere3->setTransformation(transformation3);
 	scene2->addObject(drawableSphere3);
 
-	DrawableObject* drawableSphere4 = new DrawableObject(sphereModel, shaderPhong);
+	DrawableObject* drawableSphere4 = new DrawableObject(sphereModel, shaderPhong,glowingMaterial);
 	Transformation transformation4;
 	transformation4.add(std::make_shared <Translate>(-1.5f, -1.5f, 0.f));
 	drawableSphere4->setTransformation(transformation4);
@@ -378,10 +388,10 @@ void App::createScenes()
 
 	
 
-	DrawableObject* drawableGift = new DrawableObject(giftModel, shaderPhong);
-	DrawableObject* drawableSuziSmooth = new DrawableObject(suziSmoothModel, shaderBlinn);
-	DrawableObject* drawableTree = new DrawableObject(treeModel, shaderConstant);
-	DrawableObject* drawableSphere = new DrawableObject(sphereModel, shaderLambert);
+	DrawableObject* drawableGift = new DrawableObject(giftModel, shaderPhong,glowingMaterial);
+	DrawableObject* drawableSuziSmooth = new DrawableObject(suziSmoothModel, shaderPhong,shinyMaterial);
+	DrawableObject* drawableTree = new DrawableObject(treeModel, shaderPhong,matteMaterial);
+	DrawableObject* drawableSphere = new DrawableObject(sphereModel, shaderPhong,matteMaterial);
 	Transformation transformationGift;
 	Transformation transformationSuziSmooth;
 	Transformation transformationTree;
@@ -400,7 +410,7 @@ void App::createScenes()
 	scene3->addObject(drawableSuziSmooth);
 	scene3->addObject(drawableTree);
 	scene3->addObject(drawableSphere);
-	DrawableObject* drawableTreeRotate = new DrawableObject(treeModel, shaderBlinn);
+	DrawableObject* drawableTreeRotate = new DrawableObject(treeModel, shaderBlinn,glowingMaterial);
 	Transformation transformationTreeRotate;
 	auto dynamicRotate = std::make_shared<DynamicRotate>(1.0f, 0.0f, 1.0f, 0.0f);
 	auto randomTranslate = std::make_shared <RandomTranslate>(5.f,0.0f, 0.0f, 0.0f);

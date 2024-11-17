@@ -10,7 +10,6 @@ public:
 	void addObject(DrawableObject* object);
 	void render();
 	void setCamera(Camera* camera);
-	//void setLight(Light* light);
 	void addLight(Light* light);
 	void removeLight(Light* light);
 	void cameraInit();
@@ -21,7 +20,6 @@ private:
 	std::vector<DrawableObject*> objects;
 	std::vector<ShaderProgram*> shaders;
 	Camera* camera;
-	//Light* light;
 	std::vector<Light*> lights;
 
 };

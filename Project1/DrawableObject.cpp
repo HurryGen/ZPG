@@ -1,9 +1,10 @@
 #include "DrawableObject.h"
 
-DrawableObject::DrawableObject(Model* model, ShaderProgram* shader)
+DrawableObject::DrawableObject(Model* model, ShaderProgram* shader, Material* material)
 {
 	this->model = model;
 	this->shader = shader;
+	this->material = material;
 }
 
 void DrawableObject::setTransformation(Transformation& transformation)
@@ -21,5 +22,6 @@ void DrawableObject::draw()
 {
 	shader->use();
 	shader->setTransformation(transformation);
+	shader->setMaterial(material);
 	model->draw();
 }

@@ -9,6 +9,7 @@ class Light : public Subject, public Observer
 public:
 	Light(const glm::vec3& position, const glm::vec4& color);
 	Light(const glm::vec3& position, const glm::vec4& color, glm::vec3 lightDirection, float cutoff);
+	Light(const glm::vec4& color, glm::vec3 lightDirection);
 
 	void attach(Observer* observer) override;
 	void detach(Observer* observer) override;
@@ -30,6 +31,6 @@ protected:
 	glm::vec3 lightDirection;
 	float cutoff;
 	int mode;
-	int id;
+	int id = -1;
 };
 

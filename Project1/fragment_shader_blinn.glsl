@@ -3,17 +3,32 @@ in vec3 fragPosition;
 in vec3 fragNormal;
 out vec4 fragColor;
 
-uniform vec4 ambient = vec4(0.25, 0.25, 0.25, 1.0);
+uniform vec4 ambient = vec4(0.0, 0.0, 0.0, 0.0);
 uniform vec3 cameraPosition;
 uniform float specularStrength = 70.0;
 
 struct Light {
     vec3 position;
     vec4 color;
+    vec3 spotDir;
+    float cutoff; // Spotlight cutoff angle
+    int mode;     // 0 for point light, 1 for spotlight
 };
 
+struct Material {
+    vec3 ra; // Ambient reflection
+    vec3 rd; // Diffuse reflection
+    vec3 rs; // Specular reflection
+};
+
+uniform Material material;
 uniform int numLights;
 uniform Light lights[100];
+
+float attenuation(float c, float l, float q, float dist) {
+    float att = 1.0 / (c + l * dist + q * dist * dist);
+    return clamp(att, 0.0, 1.0);
+}
 
 void main(void)
 {
@@ -26,20 +41,57 @@ void main(void)
 
     for (int i = 0; i < numLights; ++i) {
         vec3 lightDir = normalize(lights[i].position - fragPosition);
+        float distance = length(lights[i].position - fragPosition);
+        float att = attenuation(1.0, 0.018, 0.005, distance);
 
-        // Calculate diffuse component
-        float diffIntensity = max(dot(normal, lightDir), 0.0);
-        vec4 diffuseColor = diffIntensity * lights[i].color;
-        totalDiffuse += diffuseColor;
+        if (lights[i].mode == 0) {
+            // Point light
+            float diffIntensity = max(dot(normal, lightDir), 0.0);
+            vec4 diffuseColor = diffIntensity * lights[i].color * vec4(material.rd, 1.0);
+            totalDiffuse += diffuseColor * att;
 
-        // Calculate specular component if there's any diffuse lighting
-        if (diffIntensity > 0.0) {
-            vec3 halfwayDir = normalize(lightDir + viewDir);
-            float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-            vec4 specularColor = specularStrength * spec * lights[i].color;
-            totalSpecular += specularColor;
+            if (diffIntensity > 0.0) {
+                vec3 halfwayDir = normalize(lightDir + viewDir);
+                float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0); // Shininess is 32.0
+                vec4 specularColor = specularStrength * spec * lights[i].color * vec4(material.rs, 1.0);
+                totalSpecular += specularColor * att;
+            }
+        } else if (lights[i].mode == 1) {
+            // Spotlight
+            float cutoff = cos(radians(lights[i].cutoff));
+            float theta = dot(normalize(-lightDir), lights[i].spotDir);
+
+            if (theta > cutoff) {
+                float diffIntensity = max(dot(normal, lightDir), 0.0);
+                vec4 diffuseColor = diffIntensity * lights[i].color * vec4(material.rd, 1.0);
+
+                float intense = (theta - cutoff) / (1.0 - cutoff);
+                intense = clamp(intense, 0.0, 1.0);
+                totalDiffuse += diffuseColor * intense * att;
+
+                if (diffIntensity > 0.0) {
+                    vec3 halfwayDir = normalize(lightDir + viewDir);
+                    float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+                    vec4 specularColor = specularStrength * spec * lights[i].color * vec4(material.rs, 1.0);
+                    totalSpecular += specularColor * att * intense;
+                }
+            }
+        }else if(lights[i].mode == 2){
+            // Directional light
+            lightDir = normalize(-lights[i].spotDir);
+            float diffIntensity = max(dot(normal, lightDir), 0.0);
+            vec4 diffuseColor = diffIntensity * lights[i].color * vec4(material.rd, 1.0);
+            totalDiffuse += diffuseColor;
+            
+            if (diffIntensity > 0.0) {
+                vec3 halfwayDir = normalize(lightDir + viewDir);
+                float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0); // Shininess is 32.0
+                vec4 specularColor = specularStrength * spec * lights[i].color * vec4(material.rs, 1.0);
+                totalSpecular += specularColor;
+            }
         }
     }
 
-    fragColor = ambient + (totalDiffuse + totalSpecular) * objectColor;
+    vec4 ambientColor = vec4(material.ra, 1.0) * ambient;
+    fragColor = ambientColor + (totalDiffuse + totalSpecular) * objectColor;
 }

@@ -57,6 +57,14 @@ void ShaderProgram::setNumberOfLights(int numLights)
     glUniform1i(idNumLights, numLights);
 }
 
+void ShaderProgram::setMaterial(Material* material)
+{
+    use();
+    glUniform3fv(glGetUniformLocation(shaderProgram,"material.ra"), 1,glm::value_ptr(material->getRa()));
+    glUniform3fv(glGetUniformLocation(shaderProgram,"material.rd"), 1,glm::value_ptr(material->getRd()));
+    glUniform3fv(glGetUniformLocation(shaderProgram,"material.rs"), 1,value_ptr(material->getRs()));
+}
+
 
 void ShaderProgram::use()
 {

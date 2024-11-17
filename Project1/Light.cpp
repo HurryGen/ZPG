@@ -1,5 +1,7 @@
 #include "Light.h"
 
+#include <iostream>
+
 #include "Camera.h"
 
 Light::Light(const glm::vec3& position, const glm::vec4& color) : position(position), color(color)
@@ -16,6 +18,13 @@ Light::Light(const glm::vec3& position, const glm::vec4& color, glm::vec3 lightD
 	this->mode = 1;
 }
 
+Light::Light(const glm::vec4& color, glm::vec3 lightDirection)
+{
+	this->color = color;
+	this->lightDirection = lightDirection;
+	this->mode = 2;
+}
+
 void Light::attach(Observer* observer)
 {
 	observers.push_back(observer);
@@ -29,7 +38,11 @@ void Light::detach(Observer* observer)
 void Light::notify()
 {
 	for (auto observer : observers) {
-		observer->update(this);
+		if(id >= 0)
+		{
+			observer->update(this);
+		}
+		
 	}
 }
 

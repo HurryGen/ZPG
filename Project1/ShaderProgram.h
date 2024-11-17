@@ -15,6 +15,8 @@
 #include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
+
+#include "Material.h"
 #include "ShaderProgram.h"
 
 
@@ -26,6 +28,7 @@ public:
 	void setTransformation(Transformation &transformation);
 	void update(Subject* subject) override;
 	void setNumberOfLights(int numLights);
+	void setMaterial(Material* material);
 	void use();
 
 private:
@@ -36,6 +39,9 @@ private:
 	GLint idModelProjection;
 	GLint idCameraPosition;
 	GLint idNumLights;
+	GLint idMaterialRa;
+	GLint idMaterialRd;
+	GLint idMaterialRs;
 };
 
 #endif
