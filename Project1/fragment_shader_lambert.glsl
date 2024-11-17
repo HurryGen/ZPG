@@ -10,12 +10,12 @@ struct Light {
     vec4 color;
     vec3 spotDir;
     float cutoff;
-    int mode; // 0: Point light, 1: Spotlight
+    int mode; 
 };
 
 struct Material {
-    vec3 ra; // Ambient reflection
-    vec3 rd; // Diffuse reflection
+    vec3 ra; 
+    vec3 rd; 
 };
 
 uniform Material material;
@@ -38,12 +38,12 @@ void main(void)
         float att = attenuation(1.0, 0.018, 0.005, distance);
 
         if (lights[i].mode == 0) {
-            // Point light
+            
             float diffIntensity = max(dot(normal, lightDir), 0.0);
             vec4 diffuseColor = diffIntensity * lights[i].color * vec4(material.rd, 1.0);
             totalDiffuse += diffuseColor * att;
         } else if (lights[i].mode == 1) {
-            // Spotlight
+           
             float cutoff = cos(radians(lights[i].cutoff));
             float theta = dot(normalize(-lightDir), lights[i].spotDir);
 
@@ -56,7 +56,7 @@ void main(void)
                 totalDiffuse += diffuseColor * intense * att;
             }
         }else if(lights[i].mode == 2){
-            // Directional light
+           
             lightDir = normalize(-lights[i].spotDir);
             float diffIntensity = max(dot(normal, lightDir), 0.0);
             vec4 diffuseColor = diffIntensity * lights[i].color * vec4(material.rd, 1.0);

@@ -233,7 +233,7 @@ void App::createScenes()
 
 
 	scene1->addLight(light1);
-	scene1->addLight(light3);
+	//scene1->addLight(light3);
 	
 	scene2->addLight(light2);
 	scene2->addLight(directionLight);
@@ -264,7 +264,7 @@ void App::createScenes()
 
 	scene->addObject(new DrawableObject(triangleModel, shader1,glowingMaterial));
 
-	DrawableObject* drawablePlain = new DrawableObject(plainModel, shaderLambert ,glowingMaterial);
+	DrawableObject* drawablePlain = new DrawableObject(plainModel, shaderPhong , matteMaterial);
 	Transformation transformationPlain;
 	transformationPlain.add(std::make_shared <Translate>(0.f, 0.f, 0.f));
 	transformationPlain.add(std::make_shared <Scale>(50.f, 50.f, 50.f));
@@ -312,7 +312,7 @@ void App::createScenes()
 		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth) / 100;
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		DrawableObject* drawableBush = new DrawableObject(bushModel, shaderLambert, glowingMaterial);
+		DrawableObject* drawableBush = new DrawableObject(bushModel, shaderPhong, glowingMaterial);
 		Transformation transformation;
 
 		auto translate = std::make_shared<Translate>(x, 0.f, z);
@@ -327,7 +327,7 @@ void App::createScenes()
 
 	}
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 0; i++) {
 		
 
 		//DrawableObject* drawableSuziSmooth = new DrawableObject(suziSmoothModel, shaderPhong);
