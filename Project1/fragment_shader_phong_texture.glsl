@@ -6,8 +6,8 @@ out vec4 fragColor;
 uniform vec4 ambient = vec4(0.0, 0.0, 0.0, 0.0);
 uniform vec3 cameraPosition;
 uniform float specularStrength = 70.0;
-uniform sampler2D textureUnitID;
 in vec2 fragUV;
+uniform sampler2D textureUnitID;
 
 
 struct Light {
@@ -104,7 +104,6 @@ void main(void)
     }
 
     vec4 ambientColor = vec4(material.ra, 1.0)* ambient;
-    vec4 textureColor = texture(textureUnitID, fragUV);
-    fragColor = textureColor;
+    fragColor = texture(textureUnitID, fragUV);
 }
 
