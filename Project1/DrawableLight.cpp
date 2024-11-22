@@ -16,10 +16,11 @@ void DrawableLight::setTransformation(Transformation& transformation)
 
 void DrawableLight::draw()
 {
-    shader->use();
     shader->setTransformation(transformation);
     this->position = transformation.getMatrix()[3];
     this->notify();
     shader->setMaterial(material);
+    shader->use();
     model->draw();
+    shader->use0();
 }

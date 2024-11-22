@@ -20,8 +20,10 @@ ShaderProgram* DrawableObject::getShaderProgram()
 
 void DrawableObject::draw()
 {
-	shader->use();
+	
 	shader->setTransformation(transformation);
 	shader->setMaterial(material);
+	shader->use();
 	model->draw();
+	shader->use0();
 }

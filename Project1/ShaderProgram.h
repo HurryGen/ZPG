@@ -30,6 +30,7 @@ public:
 	void setNumberOfLights(int numLights);
 	void setMaterial(Material* material);
 	void use();
+	void use0();
 
 private:
 	GLuint shaderProgram;

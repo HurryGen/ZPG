@@ -27,9 +27,11 @@ ShaderProgram::ShaderProgram(const char* vertexFilePath, const char* fragmentFil
 
 void ShaderProgram::setTransformation(Transformation& transformation)
 {
+    use();
     M = transformation.getMatrix();
 
     glUniformMatrix4fv(idModelTransform, 1, GL_FALSE, &M[0][0]);
+    use0();
 }
 
 void ShaderProgram::update(Subject* subject)
@@ -49,12 +51,14 @@ void ShaderProgram::update(Subject* subject)
         glUniform3fv(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(light->getId()) + "].spotDir").c_str()), 1, glm::value_ptr(light->getLightDirection()));
         glUniform1f(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(light->getId()) + "].cutoff").c_str()), light->getCutoff());
     }
+    use0();
 }
 
 void ShaderProgram::setNumberOfLights(int numLights)
 {
     use();
     glUniform1i(idNumLights, numLights);
+    use0();
 }
 
 void ShaderProgram::setMaterial(Material* material)
@@ -63,10 +67,16 @@ void ShaderProgram::setMaterial(Material* material)
     glUniform3fv(glGetUniformLocation(shaderProgram,"material.ra"), 1,glm::value_ptr(material->getRa()));
     glUniform3fv(glGetUniformLocation(shaderProgram,"material.rd"), 1,glm::value_ptr(material->getRd()));
     glUniform3fv(glGetUniformLocation(shaderProgram,"material.rs"), 1,value_ptr(material->getRs()));
+    use0();
 }
 
 
 void ShaderProgram::use()
 {
     glUseProgram(shaderProgram);
+}
+
+void ShaderProgram::use0()
+{
+    glUseProgram(0);
 }

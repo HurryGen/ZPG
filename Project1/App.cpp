@@ -211,9 +211,9 @@ void App::createScenes()
 	Light* light2 = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
 	Light* light3 = new Light(glm::vec3(3.0f, 2.0f, 8.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
 	Light* directionLight = new Light(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	Material* matteMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 0.0f));
+	Material* matteMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f));
 	Material* shinyMaterial = new Material(glm::vec3(0.3f, 0.3f, 0.3f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f));
-	Material* glowingMaterial = new Material(glm::vec3(0.5f, 0.5f, 0.2f), glm::vec3(0.9f, 0.9f, 0.5f), glm::vec3(2.0f, 2.0f, 1.0f));
+	Material* glowingMaterial = new Material(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.9f, 0.9f, 0.9f), glm::vec3(2.0f, 2.0f, 2.0f));
 	
 	//Transformation transformation;
 	scene1 = new Scene();
@@ -232,7 +232,7 @@ void App::createScenes()
 	camera->attach(light1);
 
 
-	scene1->addLight(light1);
+	//scene1->addLight(light1);
 	//scene1->addLight(light3);
 	
 	scene2->addLight(light2);
@@ -327,7 +327,7 @@ void App::createScenes()
 
 	}
 
-	for (int i = 0; i < 0; i++) {
+	for (int i = 0; i < 5; i++) {
 		
 
 		//DrawableObject* drawableSuziSmooth = new DrawableObject(suziSmoothModel, shaderPhong);

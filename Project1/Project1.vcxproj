@@ -104,13 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Libs\glm-master;..\Libs\glfw-3.4.bin.WIN64\include;..\Libs\glew-2.2.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Libs\glm-master;..\Libs\glfw-3.4.bin.WIN64\include;..\Libs\glew-2.2.0\include;..\Libs\soil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Libs\glfw-3.4.bin.WIN64\lib-vc2022;..\Libs\glew-2.2.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Libs\glfw-3.4.bin.WIN64\lib-vc2022;..\Libs\glew-2.2.0\lib\Release\x64;..\Libs\soil\lib-vc2012\Platform_x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -154,6 +154,7 @@
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Subject.cpp" />
+    <ClCompile Include="TextureModel.cpp" />
     <ClCompile Include="Transformation.cpp" />
     <ClCompile Include="TransformationComponent.cpp" />
     <ClCompile Include="Translate.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Subject.h" />
+    <ClInclude Include="TextureModel.h" />
     <ClInclude Include="Transformation.h" />
     <ClInclude Include="TransformationComponent.h" />
     <ClInclude Include="Translate.h" />
