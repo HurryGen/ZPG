@@ -63,20 +63,16 @@ void ShaderProgram::setNumberOfLights(int numLights)
 void ShaderProgram::setMaterial(Material* material)
 {
     use();
-    if(material->getTexturePath() != "")
-    {
-        glActiveTexture(GL_TEXTURE0);
-        GLuint image = SOIL_load_OGL_texture(material->getTexturePath().c_str(), SOIL_LOAD_RGBA, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
-        if (image == NULL) {
-            std::cout << "An error occurred while loading image." << std::endl;
-            exit(EXIT_FAILURE);
-        }
-        glBindTexture(GL_TEXTURE_2D, image);
-        glUniform1i(glGetUniformLocation(shaderProgram, "textureUnitID"), 0);
-    }
     glUniform3fv(glGetUniformLocation(shaderProgram,"material.ra"), 1,glm::value_ptr(material->getRa()));
     glUniform3fv(glGetUniformLocation(shaderProgram,"material.rd"), 1,glm::value_ptr(material->getRd()));
     glUniform3fv(glGetUniformLocation(shaderProgram,"material.rs"), 1,value_ptr(material->getRs()));
+    use0();
+}
+
+void ShaderProgram::setTexture(GLuint textureUnit)
+{
+    use();
+    glUniform1i(glGetUniformLocation(shaderProgram, "textureUnitID"), textureUnit);
     use0();
 }
 

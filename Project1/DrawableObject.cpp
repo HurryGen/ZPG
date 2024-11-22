@@ -21,8 +21,11 @@ ShaderProgram* DrawableObject::getShaderProgram()
 void DrawableObject::draw()
 {
 	
+	glActiveTexture(GL_TEXTURE + material->getTextureUnit());
+	glBindTexture(GL_TEXTURE_2D, material->getTextureID());
 	shader->setTransformation(transformation);
 	shader->setMaterial(material);
+	shader->setTexture(material->getTextureUnit());
 	shader->use();
 	model->draw();
 	shader->use0();

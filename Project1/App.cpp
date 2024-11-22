@@ -34,6 +34,7 @@ Model* suziSmoothModel;
 Model* plainModel;
 TextureModel* plainTextureModel;
 
+
 Scene* scene1;
 Scene* scene2;
 Scene* scene3;
@@ -258,7 +259,7 @@ void App::createScenes()
 	Material* matteMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f));
 	Material* shinyMaterial = new Material(glm::vec3(0.3f, 0.3f, 0.3f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f));
 	Material* glowingMaterial = new Material(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.9f, 0.9f, 0.9f), glm::vec3(2.0f, 2.0f, 2.0f));
-	Material* grassMaterial = new Material(glm::vec3(0.3f, 0.3f, 0.3f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), "../Models/grass.png");
+	Material* grassMaterial = new Material(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.9f, 0.9f, 0.9f), glm::vec3(2.0f, 2.0f, 2.0f), "../Models/grass.png", 0);
 	
 	//Transformation transformation;
 	scene1 = new Scene();
@@ -277,8 +278,8 @@ void App::createScenes()
 	camera->attach(light1);
 
 
-	//scene1->addLight(light1);
-	//scene1->addLight(light3);
+	scene1->addLight(light1);
+	scene1->addLight(light3);
 	
 	scene2->addLight(light2);
 	scene2->addLight(directionLight);
@@ -291,18 +292,23 @@ void App::createScenes()
 	light1->attach(shaderBlinn);
 	light1->attach(shaderLambert);
 	light1->attach(shaderConstant);
+	light1->attach(shaderPhongTexture);
 	light2->attach(shaderPhong);
 	light2->attach(shaderBlinn);
 	light2->attach(shaderLambert);
 	light2->attach(shaderConstant);
+	light2->attach(shaderPhongTexture);
 	light3->attach(shaderPhong);
 	light3->attach(shaderBlinn);
 	light3->attach(shaderLambert);
 	light3->attach(shaderConstant);
+	light3->attach(shaderPhongTexture);
+	
 	directionLight->attach(shaderPhong);
 	directionLight->attach(shaderBlinn);
 	directionLight->attach(shaderLambert);
 	directionLight->attach(shaderConstant);
+	directionLight->attach(shaderPhongTexture);
 	
 	
 	
@@ -389,6 +395,7 @@ void App::createScenes()
 		drawableLight->attach(shaderLambert);
 		drawableLight->attach(shaderConstant);
 		drawableLight->attach(shaderDrawableLight);
+		drawableLight->attach(shaderPhongTexture);
 		scene1->addLight(drawableLight);
 		auto translate = std::make_shared <RandomTranslate>(5.f, x, 0.0f, z);
 		translate->setBoundsX(-5.f, 5.f);

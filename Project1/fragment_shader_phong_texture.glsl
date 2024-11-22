@@ -104,6 +104,6 @@ void main(void)
     }
 
     vec4 ambientColor = vec4(material.ra, 1.0)* ambient;
-    fragColor = texture(textureUnitID, fragUV);
+    fragColor = texture(textureUnitID, fragUV) * (ambientColor + (totalDiffuse + totalSpecular) * objectColor);
 }
 

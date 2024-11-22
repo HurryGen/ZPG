@@ -30,6 +30,7 @@ public:
 	void update(Subject* subject) override;
 	void setNumberOfLights(int numLights);
 	void setMaterial(Material* material);
+	void setTexture(GLuint textureUnit);
 	void use();
 	void use0();
 
