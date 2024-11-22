@@ -8,6 +8,7 @@
 #include "Light.h"
 #include "Observer.h"
 #include "Camera.h"
+#include <SOIL.h> 
 
 //Include GLM  
 #include <glm/vec3.hpp> // glm::vec3
@@ -40,9 +41,6 @@ private:
 	GLint idModelProjection;
 	GLint idCameraPosition;
 	GLint idNumLights;
-	GLint idMaterialRa;
-	GLint idMaterialRd;
-	GLint idMaterialRs;
 };
 
 #endif

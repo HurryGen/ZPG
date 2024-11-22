@@ -9,6 +9,8 @@
 #include "../Models/plain.h"
 #include "DynamicRotate.h"
 #include "RandomTranslate.h"
+#include "TextureModel.h"
+#include "../Models/plainTexture.h"
 
 ShaderProgram* shader;
 ShaderProgram* shader1;
@@ -19,6 +21,7 @@ ShaderProgram* shaderBlinn;
 ShaderProgram* shaderLambert;
 ShaderProgram* shaderConstant;
 ShaderProgram* shaderDrawableLight;
+ShaderProgram* shaderPhongTexture;
 
 
 
@@ -29,6 +32,7 @@ Model* triangleModel;
 Model* sphereModel;
 Model* suziSmoothModel;
 Model* plainModel;
+TextureModel* plainTextureModel;
 
 Scene* scene1;
 Scene* scene2;
@@ -178,6 +182,7 @@ void App::createShaders()
 	shaderLambert = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_lambert.glsl");
 	shaderConstant = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_light.glsl");
 	shaderDrawableLight = new ShaderProgram("vertex_shader_light.glsl", "fragment_shader_drawable_light.glsl");
+	shaderPhongTexture = new ShaderProgram("vertex_shader_texture.glsl", "fragment_shader_phong_texture.glsl");
 
 }
 
@@ -196,6 +201,7 @@ void App::createModels()
 	sphereModel = new Model(sphere, sizeof(sphere) / sizeof(sphere[0]), GL_TRIANGLES, 0, sizeof(sphere));
 	suziSmoothModel = new Model(suziSmooth, sizeof(suziSmooth) / sizeof(suziSmooth[0]), GL_TRIANGLES, 0, sizeof(suziSmooth));
 	plainModel = new Model(plain, sizeof(plain) / sizeof(plain[0]), GL_TRIANGLES, 0, sizeof(plain));
+	plainTextureModel = new TextureModel(plainTexture, sizeof(plainTexture) / sizeof(plainTexture[0]), GL_TRIANGLES, 0, sizeof(plainTexture));
 	
 }
 void App::createCameras()
@@ -214,6 +220,7 @@ void App::createScenes()
 	Material* matteMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f));
 	Material* shinyMaterial = new Material(glm::vec3(0.3f, 0.3f, 0.3f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f));
 	Material* glowingMaterial = new Material(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.9f, 0.9f, 0.9f), glm::vec3(2.0f, 2.0f, 2.0f));
+	Material* grassMaterial = new Material(glm::vec3(0.3f, 0.3f, 0.3f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f), "../Models/grass.png");
 	
 	//Transformation transformation;
 	scene1 = new Scene();
@@ -264,7 +271,7 @@ void App::createScenes()
 
 	scene->addObject(new DrawableObject(triangleModel, shader1,glowingMaterial));
 
-	DrawableObject* drawablePlain = new DrawableObject(plainModel, shaderPhong , matteMaterial);
+	DrawableObject* drawablePlain = new DrawableObject(plainTextureModel, shaderPhongTexture , grassMaterial);
 	Transformation transformationPlain;
 	transformationPlain.add(std::make_shared <Translate>(0.f, 0.f, 0.f));
 	transformationPlain.add(std::make_shared <Scale>(50.f, 50.f, 50.f));

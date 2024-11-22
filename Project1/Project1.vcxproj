@@ -196,6 +196,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="fragment_shader_drawable_light.glsl" />
+    <Content Include="fragment_shader_phong_texture.glsl" />
+    <Content Include="vertex_shader_texture.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
