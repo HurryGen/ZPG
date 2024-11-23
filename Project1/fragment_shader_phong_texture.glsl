@@ -14,6 +14,7 @@ struct Light {
     vec3 position;
     vec4 color;
     vec3 spotDir;
+    vec3 attenuation;
     float cutoff;
     int mode;
 };
@@ -46,7 +47,7 @@ void main(void)
     for (int i = 0; i < numLights; ++i) {
         vec3 lightDir = normalize(lights[i].position - fragPosition);
         float distance = length(lights[i].position - fragPosition);
-        float att = attenuation(1.0, 0.018, 0.005, distance);
+        float att = attenuation(lights[i].attenuation.x, lights[i].attenuation.y, lights[i].attenuation.z, distance);
 
 
         if (lights[i].mode == 0) {

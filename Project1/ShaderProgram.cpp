@@ -49,6 +49,7 @@ void ShaderProgram::update(Subject* subject)
         glUniform1i(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(light->getId()) + "].mode").c_str()), light->getMode());
         glUniform3fv(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(light->getId()) + "].spotDir").c_str()), 1, glm::value_ptr(light->getLightDirection()));
         glUniform1f(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(light->getId()) + "].cutoff").c_str()), light->getCutoff());
+        glUniform3fv(glGetUniformLocation(shaderProgram, ("lights[" + std::to_string(light->getId()) + "].attenuation").c_str()), 1, glm::value_ptr(light->getAttenuation()));
     }
     use0();
 }

@@ -1,6 +1,6 @@
 ﻿#include "DrawableLight.h"
 
-DrawableLight::DrawableLight(Model* model, ShaderProgram* shader, Material* material, Light* light):DrawableObject(model, shader, material), Light(light->getPosition(), light->getColor())
+DrawableLight::DrawableLight(Model* model, ShaderProgram* shader, Material* material, Light* light):DrawableObject(model, shader, material), Light(light->getPosition(), light->getColor(), light->getAttenuation())
 {
 }
 

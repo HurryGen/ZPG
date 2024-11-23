@@ -254,9 +254,9 @@ void App::createCameras()
 
 void App::createScenes()
 {
-	Light* light1 = new Light(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec4(0.5f, 0.5f, 1.f, 1.0f), glm::vec3(0.05f, -1.0f, 0.0f), 25.f);
-	Light* light2 = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
-	Light* light3 = new Light(glm::vec3(3.0f, 2.0f, 8.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f));
+	Light* light1 = new Light(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec4(1.0f, 1.0f, 2.f, 1.0f),glm::vec3(1.0, 0.018, 0.005) ,glm::vec3(0.05f, -1.0f, 0.0f), 25.f);
+	Light* light2 = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f), glm::vec3(1.0, 0.018, 0.005));
+	Light* light3 = new Light(glm::vec3(3.0f, 2.0f, 8.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f), glm::vec3(1.0, 0.018, 0.005));
 	Light* directionLight = new Light(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	Material* matteMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f));
 	Material* shinyMaterial = new Material(glm::vec3(0.3f, 0.3f, 0.3f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f));
@@ -281,7 +281,7 @@ void App::createScenes()
 
 
 	scene1->addLight(light1);
-	scene1->addLight(light3);
+	//scene1->addLight(light3);
 	
 	scene2->addLight(light2);
 	scene2->addLight(directionLight);
@@ -336,7 +336,7 @@ void App::createScenes()
 		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth)/100;
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		DrawableObject* drawableTree = new DrawableObject(treeModel, shaderPhong, glowingMaterial);
+		DrawableObject* drawableTree = new DrawableObject(treeModel, shaderPhong, matteMaterial);
 		Transformation transformation;
 
 		auto autoRotate = std::make_shared<DynamicRotate>(1.f,0.f, 1.f, 0.f);
@@ -365,7 +365,7 @@ void App::createScenes()
 		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth) / 100;
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		DrawableObject* drawableBush = new DrawableObject(bushModel, shaderPhong, glowingMaterial);
+		DrawableObject* drawableBush = new DrawableObject(bushModel, shaderPhong, matteMaterial);
 		Transformation transformation;
 
 		auto translate = std::make_shared<Translate>(x, 0.f, z);
@@ -390,7 +390,7 @@ void App::createScenes()
 
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		Light* light = new Light(glm::vec3( x, 0.0f, z), glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
+		Light* light = new Light(glm::vec3( x, 0.0f, z), glm::vec4(0.749f, 0.78f, 0.071f, 1.0f),glm::vec3(1.0, 0.018, 0.055));
 		DrawableLight* drawableLight = new DrawableLight(sphereModel, shaderDrawableLight, glowingMaterial,light);
 		drawableLight->attach(shaderPhong);
 		drawableLight->attach(shaderBlinn);

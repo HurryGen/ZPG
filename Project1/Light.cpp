@@ -4,15 +4,16 @@
 
 #include "Camera.h"
 
-Light::Light(const glm::vec3& position, const glm::vec4& color) : position(position), color(color)
+Light::Light(const glm::vec3& position, const glm::vec4& color, glm::vec3 attenuation) : position(position), color(color), attenuation(attenuation)
 {
 	mode = 0;
 }
 
-Light::Light(const glm::vec3& position, const glm::vec4& color, glm::vec3 lightDirection, float cutoff)
+Light::Light(const glm::vec3& position, const glm::vec4& color, glm::vec3 attenuation ,glm::vec3 lightDirection, float cutoff)
 {
 	this->position = position;
 	this->color = color;
+	this->attenuation = attenuation;
 	this->lightDirection = lightDirection;
 	this->cutoff = cutoff;
 	this->mode = 1;
@@ -56,6 +57,11 @@ glm::vec3 Light::getPosition()
 glm::vec4 Light::getColor()
 {
 	return color;
+}
+
+glm::vec3 Light::getAttenuation()
+{
+	return attenuation;
 }
 
 void Light::update(Subject* subject)
