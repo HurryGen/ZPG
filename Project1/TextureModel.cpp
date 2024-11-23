@@ -21,3 +21,8 @@ TextureModel::TextureModel(const float* model, size_t vertexCount, GLuint mode, 
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (GLvoid*)(6 * sizeof(float)));
 }
+
+void TextureModel::draw()
+{
+    Model::draw();
+}

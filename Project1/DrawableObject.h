@@ -8,6 +8,7 @@ class DrawableObject : public Drawable
 {
 public:
 	DrawableObject(Model* model, ShaderProgram* shader,Material* material);
+	DrawableObject(Model* model, ShaderProgram* shader);
 	void setTransformation(Transformation& transformation) override;
 	ShaderProgram* getShaderProgram();
 	void draw() override;

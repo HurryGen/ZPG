@@ -9,6 +9,7 @@
 #include "../Models/plain.h"
 #include "DynamicRotate.h"
 #include "RandomTranslate.h"
+#include "SkyCube.h"
 #include "TextureModel.h"
 #include "../Models/plainTexture.h"
 
@@ -22,6 +23,7 @@ ShaderProgram* shaderLambert;
 ShaderProgram* shaderConstant;
 ShaderProgram* shaderDrawableLight;
 ShaderProgram* shaderPhongTexture;
+
 
 
 
@@ -43,44 +45,7 @@ Scene* scene4;
 Scene* scene;
 Camera* camera;
 
-const float skycube[108] = {
-	-1.0f,-1.0f,-1.0f,
-	-1.0f,-1.0f, 1.0f,
-	-1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f,-1.0f, 
-	-1.0f,-1.0f,-1.0f,
-	-1.0f, 1.0f,-1.0f,
-	1.0f,-1.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f,
-	1.0f,-1.0f,-1.0f,
-	1.0f, 1.0f,-1.0f,
-	1.0f,-1.0f,-1.0f,
-	-1.0f,-1.0f,-1.0f,
-	-1.0f,-1.0f,-1.0f,
-	-1.0f, 1.0f, 1.0f,
-	-1.0f, 1.0f,-1.0f,
-	1.0f,-1.0f, 1.0f,
-	-1.0f,-1.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f,
-	-1.0f, 1.0f, 1.0f,
-	-1.0f,-1.0f, 1.0f,
-	1.0f,-1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f,
-	1.0f,-1.0f,-1.0f,
-	1.0f, 1.0f,-1.0f,
-	1.0f,-1.0f,-1.0f,
-	1.0f, 1.0f, 1.0f,
-	1.0f,-1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f,-1.0f,
-	-1.0f, 1.0f,-1.0f,
-	1.0f, 1.0f, 1.0f,
-	-1.0f, 1.0f,-1.0f,
-	-1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f, 1.0f,
-	-1.0f, 1.0f, 1.0f,
-	1.0f,-1.0f, 1.0f
-};
+
 
 App::App() {
 	
@@ -257,7 +222,7 @@ void App::createScenes()
 	Light* light1 = new Light(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec4(1.0f, 1.0f, 2.f, 1.0f),glm::vec3(1.0, 0.018, 0.005) ,glm::vec3(0.05f, -1.0f, 0.0f), 25.f);
 	Light* light2 = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f), glm::vec3(1.0, 0.018, 0.005));
 	Light* light3 = new Light(glm::vec3(3.0f, 2.0f, 8.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f), glm::vec3(1.0, 0.018, 0.005));
-	Light* directionLight = new Light(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	Light* directionLight = new Light(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, -1.0f, 1.0f));
 	Material* matteMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f));
 	Material* shinyMaterial = new Material(glm::vec3(0.3f, 0.3f, 0.3f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f));
 	Material* glowingMaterial = new Material(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.9f, 0.9f, 0.9f), glm::vec3(2.0f, 2.0f, 2.0f));
@@ -282,6 +247,7 @@ void App::createScenes()
 
 	scene1->addLight(light1);
 	//scene1->addLight(light3);
+	scene1->addLight(directionLight);
 	
 	scene2->addLight(light2);
 	scene2->addLight(directionLight);
@@ -323,6 +289,9 @@ void App::createScenes()
 	transformationPlain.add(std::make_shared <Scale>(50.f, 50.f, 50.f));
 	drawablePlain->setTransformation(transformationPlain);
 	scene1->addObject(drawablePlain);
+	
+	
+	scene1->setSkyEnabled(true);
 	
 	for (int i = 0; i < 100; i++) {
 		//std::srand(static_cast<unsigned int>(6646545+i*1000000));

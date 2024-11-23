@@ -2,6 +2,8 @@
 #include <vector>
 #include "DrawableObject.h"
 #include "ShaderProgram.h"
+#include "SkyCube.h"
+
 class Scene
 {
 public:
@@ -14,13 +16,19 @@ public:
 	void removeLight(Light* light);
 	void cameraInit();
 	void lightsInit();
+	void setSkyEnabled(bool enabled);
 	std::vector<DrawableObject*> getObjects();
+	void renderSkybox();
 
 private:
 	std::vector<DrawableObject*> objects;
 	std::vector<ShaderProgram*> shaders;
 	Camera* camera;
 	std::vector<Light*> lights;
+	bool skyEnabled = false;
+	Model* skyCube;
+	DrawableObject* skyCubeObject;
+	ShaderProgram* shaderSkybox;
 
 };
 

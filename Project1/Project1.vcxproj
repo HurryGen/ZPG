@@ -153,6 +153,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="SkyCube.cpp" />
     <ClCompile Include="Subject.cpp" />
     <ClCompile Include="TextureModel.cpp" />
     <ClCompile Include="Transformation.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderLoader.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="SkyCube.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="TextureModel.h" />
     <ClInclude Include="Transformation.h" />
@@ -196,6 +198,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="fragment_shader_phong_texture.glsl" />
+    <Content Include="PhongFragmentShader.glsl" />
+    <Content Include="PhongVertexShader.glsl" />
     <Content Include="vertex_shader_texture.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

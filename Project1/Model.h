@@ -6,7 +6,7 @@
 class Model {
 public:
 	Model(const float* model, size_t vertexCount, GLuint mode, int first, int count);
-	void draw();
+	virtual void draw();
 
 protected:
 	GLuint VBO;

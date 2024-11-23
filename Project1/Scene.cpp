@@ -1,8 +1,14 @@
 #include "Scene.h"
 
+#include "SkyCube.h"
+
 Scene::Scene()
 {
-
+	skyCube = new SkyCube();
+	shaderSkybox = new ShaderProgram("PhongVertexShader.glsl", "PhongFragmentShader.glsl");
+	skyCubeObject = new DrawableObject(skyCube, shaderSkybox);
+	shaders.push_back(shaderSkybox);
+	
 }
 
 Scene::~Scene()
@@ -20,10 +26,15 @@ void Scene::addObject(DrawableObject* object)
 
 void Scene::render()
 {
-	for (DrawableObject* object : objects) {
+	if (skyEnabled)
+	{
+		skyCubeObject->draw();
+		
+	}
+	for (DrawableObject* object : objects)
+	{
 		object->draw();
 	}
-	
 }
 
 void Scene::setCamera(Camera* camera)
@@ -62,9 +73,20 @@ void Scene::lightsInit()
 	
 }
 
+void Scene::setSkyEnabled(bool enabled)
+{
+	skyEnabled = enabled;
+}
 
 
 std::vector<DrawableObject*> Scene::getObjects()
 {
 	return objects;
+}
+
+void Scene::renderSkybox()
+{
+	if (skyEnabled) {
+		skyCubeObject->draw();
+	}
 }
