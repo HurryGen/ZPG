@@ -23,6 +23,8 @@ void DrawableObject::draw()
 	
 	glActiveTexture(GL_TEXTURE + material->getTextureUnit());
 	glBindTexture(GL_TEXTURE_2D, material->getTextureID());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	shader->setTransformation(transformation);
 	shader->setMaterial(material);
 	shader->setTexture(material->getTextureUnit());

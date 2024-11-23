@@ -33,6 +33,7 @@ Model* sphereModel;
 Model* suziSmoothModel;
 Model* plainModel;
 TextureModel* plainTextureModel;
+TextureModel* plainDenseTextureModel;
 
 
 Scene* scene1;
@@ -241,6 +242,7 @@ void App::createModels()
 	suziSmoothModel = new Model(suziSmooth, sizeof(suziSmooth) / sizeof(suziSmooth[0]), GL_TRIANGLES, 0, sizeof(suziSmooth));
 	plainModel = new Model(plain, sizeof(plain) / sizeof(plain[0]), GL_TRIANGLES, 0, sizeof(plain));
 	plainTextureModel = new TextureModel(plainTexture, sizeof(plainTexture) / sizeof(plainTexture[0]), GL_TRIANGLES, 0, sizeof(plainTexture));
+	plainDenseTextureModel = new TextureModel(plainDenseTexture, sizeof(plainDenseTexture) / sizeof(plainDenseTexture[0]), GL_TRIANGLES, 0, sizeof(plainDenseTexture));
 	
 }
 void App::createCameras()
@@ -259,8 +261,8 @@ void App::createScenes()
 	Material* matteMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f));
 	Material* shinyMaterial = new Material(glm::vec3(0.3f, 0.3f, 0.3f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f));
 	Material* glowingMaterial = new Material(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.9f, 0.9f, 0.9f), glm::vec3(2.0f, 2.0f, 2.0f));
-	Material* grassMaterial = new Material(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.9f, 0.9f, 0.9f), glm::vec3(2.0f, 2.0f, 2.0f), "../Models/grass.png", 0);
-	
+	Material* grassMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/grass.png", 0);
+	Material* woodMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/wooden_fence.png", 0);
 	//Transformation transformation;
 	scene1 = new Scene();
 	scene2 = new Scene();
@@ -315,7 +317,7 @@ void App::createScenes()
 
 	scene->addObject(new DrawableObject(triangleModel, shader1,glowingMaterial));
 
-	DrawableObject* drawablePlain = new DrawableObject(plainTextureModel, shaderPhongTexture , grassMaterial);
+	DrawableObject* drawablePlain = new DrawableObject(plainDenseTextureModel, shaderPhongTexture , grassMaterial);
 	Transformation transformationPlain;
 	transformationPlain.add(std::make_shared <Translate>(0.f, 0.f, 0.f));
 	transformationPlain.add(std::make_shared <Scale>(50.f, 50.f, 50.f));
