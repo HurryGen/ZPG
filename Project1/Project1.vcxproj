@@ -198,8 +198,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="fragment_shader_phong_texture.glsl" />
-    <Content Include="PhongFragmentShader.glsl" />
-    <Content Include="PhongVertexShader.glsl" />
+    <Content Include="fragment_shader_skybox.glsl" />
+    <Content Include="vertex_shader_skybox.glsl" />
     <Content Include="vertex_shader_texture.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

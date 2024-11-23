@@ -4,10 +4,6 @@
 
 Scene::Scene()
 {
-	skyCube = new SkyCube();
-	shaderSkybox = new ShaderProgram("PhongVertexShader.glsl", "PhongFragmentShader.glsl");
-	skyCubeObject = new DrawableObject(skyCube, shaderSkybox);
-	shaders.push_back(shaderSkybox);
 	
 }
 
@@ -75,6 +71,10 @@ void Scene::lightsInit()
 
 void Scene::setSkyEnabled(bool enabled)
 {
+	skyCube = new SkyCube();
+	shaderSkybox = new ShaderProgram("vertex_shader_skybox.glsl", "fragment_shader_skybox.glsl");
+	skyCubeObject = new DrawableObject(skyCube, shaderSkybox);
+	shaders.push_back(shaderSkybox);
 	skyEnabled = enabled;
 }
 
