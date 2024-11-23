@@ -325,7 +325,7 @@ void App::createScenes()
 	scene1->addObject(drawablePlain);
 	
 	for (int i = 0; i < 100; i++) {
-		std::srand(static_cast<unsigned int>(6646545+i*1000000));
+		//std::srand(static_cast<unsigned int>(6646545+i*1000000));
 		int lowerBoundAngle = -360;
 		int upperBoundAngle = 360;
 		int upperBound = 20;
@@ -354,7 +354,7 @@ void App::createScenes()
 		
 	}
 	for (int i = 0; i < 100; i++) {
-		std::srand(static_cast<unsigned int>(544565465654 + i * 100000));
+		//std::srand(static_cast<unsigned int>(544565465654 + i * 100000));
 		int lowerBoundAngle = -360;
 		int upperBoundAngle = 360;
 		int upperBound = 20;
@@ -404,7 +404,7 @@ void App::createScenes()
 		translate->setBoundsY(1.f, 5.f);
 		translate->setBoundsZ(-5.f, 5.f);
 		transformation.add(translate);
-		auto scale = std::make_shared<Scale>(0.2f, 0.2f, 0.2f);
+		auto scale = std::make_shared<Scale>(0.04f, 0.04f, 0.04f);
 		transformation.add(scale);
 		drawableLight->setTransformation(transformation);
 		
