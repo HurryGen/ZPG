@@ -1,5 +1,6 @@
 #include "App.h"
 
+#include "AssimpModel.h"
 #include "DrawableLight.h"
 #include "../Models/tree.h"
 #include "../Models/bushes.h"
@@ -34,6 +35,7 @@ Model* triangleModel;
 Model* sphereModel;
 Model* suziSmoothModel;
 Model* plainModel;
+AssimpModel* houseModel;
 TextureModel* plainTextureModel;
 TextureModel* plainDenseTextureModel;
 
@@ -208,6 +210,7 @@ void App::createModels()
 	plainModel = new Model(plain, sizeof(plain) / sizeof(plain[0]), GL_TRIANGLES, 0, sizeof(plain));
 	plainTextureModel = new TextureModel(plainTexture, sizeof(plainTexture) / sizeof(plainTexture[0]), GL_TRIANGLES, 0, sizeof(plainTexture));
 	plainDenseTextureModel = new TextureModel(plainDenseTexture, sizeof(plainDenseTexture) / sizeof(plainDenseTexture[0]), GL_TRIANGLES, 0, sizeof(plainDenseTexture));
+	houseModel = new AssimpModel("../Models/house.obj", GL_TRIANGLES);
 	
 }
 void App::createCameras()
@@ -228,6 +231,7 @@ void App::createScenes()
 	Material* glowingMaterial = new Material(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.9f, 0.9f, 0.9f), glm::vec3(2.0f, 2.0f, 2.0f));
 	Material* grassMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/grass.png", 1);
 	Material* woodMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/wooden_fence.png", 2);
+	Material* houseMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/house.png", 3);
 	//Transformation transformation;
 	scene1 = new Scene();
 	scene2 = new Scene();
@@ -271,12 +275,16 @@ void App::createScenes()
 	light3->attach(shaderLambert);
 	light3->attach(shaderConstant);
 	light3->attach(shaderPhongTexture);
+
+	
+	
 	
 	directionLight->attach(shaderPhong);
 	directionLight->attach(shaderBlinn);
 	directionLight->attach(shaderLambert);
 	directionLight->attach(shaderConstant);
 	directionLight->attach(shaderPhongTexture);
+	//directionLight->attach(shaderHouse);
 	
 	
 	
@@ -289,6 +297,12 @@ void App::createScenes()
 	transformationPlain.add(std::make_shared <Scale>(50.f, 50.f, 50.f));
 	drawablePlain->setTransformation(transformationPlain);
 	scene1->addObject(drawablePlain);
+
+	DrawableObject* drawableHouse = new DrawableObject(houseModel, shaderPhongTexture, houseMaterial);
+	Transformation transformationHouse;
+	transformationHouse.add(std::make_shared <Translate>(0.f, 0.f, 0.f));
+	drawableHouse->setTransformation(transformationHouse);
+	scene1->addObject(drawableHouse);
 
 	// DrawableObject* drawablePlainTexture = new DrawableObject(plainTextureModel, shaderPhongTexture, woodMaterial);
 	// Transformation transformationPlainTexture;

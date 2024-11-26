@@ -35,7 +35,7 @@ Material::Material(glm::vec3 ra, glm::vec3 rd, glm::vec3 rs, std::string texture
    
     this->textureUnit = textureUnit;
     glActiveTexture(GL_TEXTURE0 + textureUnit);
-    GLuint textureID= SOIL_load_OGL_texture(texturePath.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
+    GLuint textureID = SOIL_load_OGL_texture(texturePath.c_str(), SOIL_LOAD_RGBA, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
     if(!textureID)
     {
         std::cerr << "Error loading texture: " << texturePath << std::endl;
