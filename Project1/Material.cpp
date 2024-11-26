@@ -1,5 +1,6 @@
 ﻿#include "Material.h"
 
+#include <iostream>
 #include <SOIL.h>
 
 glm::vec3 Material::getRs()
@@ -11,11 +12,6 @@ glm::vec3 Material::getRs()
 GLuint Material::getTextureUnit()
 {
     return textureUnit;
-}
-
-GLuint Material::getTextureID()
-{
-    return textureID;
 }
 
 glm::vec3 Material::getRd()
@@ -36,8 +32,17 @@ Material::Material(glm::vec3 ra, glm::vec3 rd, glm::vec3 rs, std::string texture
     this->ra = ra;
     this->rd = rd;
     this->rs = rs;
-    this->textureID = SOIL_load_OGL_texture(texturePath.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
+   
     this->textureUnit = textureUnit;
+    glActiveTexture(GL_TEXTURE0 + textureUnit);
+    GLuint textureID= SOIL_load_OGL_texture(texturePath.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
+    if(!textureID)
+    {
+        std::cerr << "Error loading texture: " << texturePath << std::endl;
+    }
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 glm::vec3 Material::getRa()

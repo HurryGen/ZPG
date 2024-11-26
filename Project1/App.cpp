@@ -226,8 +226,8 @@ void App::createScenes()
 	Material* matteMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f));
 	Material* shinyMaterial = new Material(glm::vec3(0.3f, 0.3f, 0.3f), glm::vec3(0.8f, 0.8f, 0.8f), glm::vec3(1.0f, 1.0f, 1.0f));
 	Material* glowingMaterial = new Material(glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.9f, 0.9f, 0.9f), glm::vec3(2.0f, 2.0f, 2.0f));
-	Material* grassMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/grass.png", 0);
-	Material* woodMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/wooden_fence.png", 0);
+	Material* grassMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/grass.png", 1);
+	Material* woodMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/wooden_fence.png", 2);
 	//Transformation transformation;
 	scene1 = new Scene();
 	scene2 = new Scene();
@@ -289,6 +289,13 @@ void App::createScenes()
 	transformationPlain.add(std::make_shared <Scale>(50.f, 50.f, 50.f));
 	drawablePlain->setTransformation(transformationPlain);
 	scene1->addObject(drawablePlain);
+
+	// DrawableObject* drawablePlainTexture = new DrawableObject(plainTextureModel, shaderPhongTexture, woodMaterial);
+	// Transformation transformationPlainTexture;
+	// transformationPlainTexture.add(std::make_shared <Translate>(0.f, 2.f, 0.f));
+	// transformationPlainTexture.add(std::make_shared <Scale>(5.f, 5.f, 5.f));
+	// drawablePlainTexture->setTransformation(transformationPlainTexture);
+	// scene1->addObject(drawablePlainTexture);
 	
 	
 	scene1->setSkyEnabled(true);

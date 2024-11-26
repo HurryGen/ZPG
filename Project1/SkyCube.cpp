@@ -16,7 +16,7 @@ SkyCube::SkyCube(): Model(skycube, 108, GL_TRIANGLES, 0, 36)
     glGenVertexArrays(1, &VAO); //generate the VAO
     glBindVertexArray(VAO); //bind the VAO
     glEnableVertexAttribArray(0); //enable vertex attributes
-    glEnableVertexAttribArray(1);
+    //glEnableVertexAttribArray(1);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);

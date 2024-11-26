@@ -26,7 +26,7 @@ private:
 	Camera* camera;
 	std::vector<Light*> lights;
 	bool skyEnabled = false;
-	Model* skyCube;
+	SkyCube* skyCube;
 	DrawableObject* skyCubeObject;
 	ShaderProgram* shaderSkybox;
 

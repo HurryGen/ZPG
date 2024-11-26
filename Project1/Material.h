@@ -12,13 +12,11 @@ public:
     glm::vec3 getRd();
     glm::vec3 getRs();
     GLuint getTextureUnit();
-    GLuint getTextureID();
 private:
     glm::vec3 ra;
     glm::vec3 rd;
     glm::vec3 rs;
     std::string texturePath;
     GLuint textureUnit;
-    GLuint textureID;
     
 };
