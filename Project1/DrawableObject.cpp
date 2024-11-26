@@ -2,14 +2,14 @@
 
 #include "SkyCube.h"
 
-DrawableObject::DrawableObject(Model* model, ShaderProgram* shader, Material* material)
+DrawableObject::DrawableObject(AbstractModel* model, ShaderProgram* shader, Material* material)
 {
 	this->model = model;
 	this->shader = shader;
 	this->material = material;
 }
 
-DrawableObject::DrawableObject(Model* model, ShaderProgram* shader)
+DrawableObject::DrawableObject(AbstractModel* model, ShaderProgram* shader)
 {	
 	this->model = model;
 	this->shader = shader;

@@ -104,13 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Libs\glm-master;..\Libs\glfw-3.4.bin.WIN64\include;..\Libs\glew-2.2.0\include;..\Libs\soil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Libs\assimp\include;..\Libs\glm-master;..\Libs\glfw-3.4.bin.WIN64\include;..\Libs\glew-2.2.0\include;..\Libs\soil\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Libs\glfw-3.4.bin.WIN64\lib-vc2022;..\Libs\glew-2.2.0\lib\Release\x64;..\Libs\soil\lib-vc2012\Platform_x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32.lib;glfw3.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Libs\assimp\lib\x64\v141\Debug;..\Libs\glfw-3.4.bin.WIN64\lib-vc2022;..\Libs\glew-2.2.0\lib\Release\x64;..\Libs\soil\lib-vc2012\Platform_x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32.lib;glfw3.lib;SOIL.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -130,7 +130,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AbstractModel.cpp" />
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="AssimpModel.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="DrawableLight.cpp" />
@@ -169,7 +171,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Models\sphere.h" />
+    <ClInclude Include="AbstractModel.h" />
     <ClInclude Include="App.h" />
+    <ClInclude Include="AssimpModel.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="DrawableLight.h" />
