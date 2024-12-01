@@ -35,7 +35,9 @@ Model* triangleModel;
 Model* sphereModel;
 Model* suziSmoothModel;
 Model* plainModel;
+AssimpModel* loginModel;
 AssimpModel* houseModel;
+AssimpModel* dogModel;
 TextureModel* plainTextureModel;
 TextureModel* plainDenseTextureModel;
 
@@ -211,6 +213,8 @@ void App::createModels()
 	plainTextureModel = new TextureModel(plainTexture, sizeof(plainTexture) / sizeof(plainTexture[0]), GL_TRIANGLES, 0, sizeof(plainTexture));
 	plainDenseTextureModel = new TextureModel(plainDenseTexture, sizeof(plainDenseTexture) / sizeof(plainDenseTexture[0]), GL_TRIANGLES, 0, sizeof(plainDenseTexture));
 	houseModel = new AssimpModel("../Models/house.obj", GL_TRIANGLES);
+	loginModel = new AssimpModel("../Models/login.obj", GL_TRIANGLES);
+	dogModel = new AssimpModel("../Models/dog.obj", GL_TRIANGLES);
 	
 }
 void App::createCameras()
@@ -232,6 +236,7 @@ void App::createScenes()
 	Material* grassMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/grass.png", 1);
 	Material* woodMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/wooden_fence.png", 2);
 	Material* houseMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/house.png", 3);
+	Material* dogMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/dog.jpg", 4);
 	//Transformation transformation;
 	scene1 = new Scene();
 	scene2 = new Scene();
@@ -303,6 +308,25 @@ void App::createScenes()
 	transformationHouse.add(std::make_shared <Translate>(0.f, 0.f, 0.f));
 	drawableHouse->setTransformation(transformationHouse);
 	scene1->addObject(drawableHouse);
+
+	DrawableObject* drawableLogin = new DrawableObject(loginModel, shaderPhongTexture, woodMaterial);
+	Transformation transformationLogin;
+	
+	transformationLogin.add(std::make_shared <Translate>(8.f, 2.f, 8.f));
+	transformationLogin.add(std::make_shared <Scale>(2.f, 2.f, 2.f));
+	drawableLogin->setTransformation(transformationLogin);
+	scene1->addObject(drawableLogin);
+
+
+	DrawableObject* drawableDog = new DrawableObject(dogModel, shaderPhongTexture, dogMaterial);
+	Transformation transformationDog;
+	transformationDog.add(std::make_shared <Translate>(-8.f, 0.f, 8.f));
+	transformationDog.add(std::make_shared<Rotate>(90, 1.0f, 0.0f, 0.0f));
+	transformationDog.add(std::make_shared<Rotate>(180, 0.0f, 1.0f, 0.0f));
+	transformationDog.add(std::make_shared<Rotate>(180, 0.0f, 0.0f, 1.0f));
+	transformationDog.add(std::make_shared <Scale>(0.05f, 0.05f, 0.05f));
+	drawableDog->setTransformation(transformationDog);
+	scene1->addObject(drawableDog);
 
 	// DrawableObject* drawablePlainTexture = new DrawableObject(plainTextureModel, shaderPhongTexture, woodMaterial);
 	// Transformation transformationPlainTexture;
