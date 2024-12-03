@@ -3,7 +3,7 @@
 
 
 
-Model::Model(const float* model, size_t vertexCount, GLuint mode, int first, int count): mode(mode), first(first), count(count) {
+Model::Model(const float* model, size_t vertexCount, GLuint mode, int first): mode(mode), vertexCount(vertexCount), first(first) {
 	//vertex buffer object (VBO)
 	VBO = 0;
 	glGenBuffers(1, &VBO); // generate the VBO
@@ -25,5 +25,5 @@ Model::Model(const float* model, size_t vertexCount, GLuint mode, int first, int
 void Model::draw()
 {
 	glBindVertexArray(VAO);
-	glDrawArrays(mode, first, count); 
+	glDrawArrays(mode, first, vertexCount); 
 }

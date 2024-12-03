@@ -9,6 +9,7 @@
 #include "../Models/suzi_smooth.h"
 #include "../Models/plain.h"
 #include "DynamicRotate.h"
+#include "ModelFactory.h"
 #include "RandomTranslate.h"
 #include "SkyCube.h"
 #include "TextureModel.h"
@@ -28,18 +29,18 @@ ShaderProgram* shaderPhongTexture;
 
 
 
-Model* treeModel;
-Model* bushModel;
-Model* giftModel;
-Model* triangleModel;
-Model* sphereModel;
-Model* suziSmoothModel;
-Model* plainModel;
-AssimpModel* loginModel;
-AssimpModel* houseModel;
-AssimpModel* dogModel;
-TextureModel* plainTextureModel;
-TextureModel* plainDenseTextureModel;
+AbstractModel* treeModel;
+AbstractModel* bushModel;
+AbstractModel* giftModel;
+AbstractModel* triangleModel;
+AbstractModel* sphereModel;
+AbstractModel* suziSmoothModel;
+AbstractModel* plainModel;
+AbstractModel* loginModel;
+AbstractModel* houseModel;
+AbstractModel* dogModel;
+AbstractModel* plainTextureModel;
+AbstractModel* plainDenseTextureModel;
 
 
 Scene* scene1;
@@ -203,18 +204,18 @@ void App::createModels()
    - 0.5f, -0.5f, 0.0f, 0,0,0,
 	};
 
-	treeModel = new Model(tree, sizeof(tree)/sizeof(tree[0]), GL_TRIANGLES, 0, sizeof(bushes));
-	bushModel = new Model(bushes, sizeof(bushes) / sizeof(bushes[0]), GL_TRIANGLES, 0, sizeof(bushes));
-	giftModel = new Model(gift, sizeof(gift) / sizeof(gift[0]), GL_TRIANGLES, 0, sizeof(gift));
-	triangleModel = new Model(points, sizeof(points) / sizeof(points[0]), GL_TRIANGLES, 0, 3);
-	sphereModel = new Model(sphere, sizeof(sphere) / sizeof(sphere[0]), GL_TRIANGLES, 0, sizeof(sphere));
-	suziSmoothModel = new Model(suziSmooth, sizeof(suziSmooth) / sizeof(suziSmooth[0]), GL_TRIANGLES, 0, sizeof(suziSmooth));
-	plainModel = new Model(plain, sizeof(plain) / sizeof(plain[0]), GL_TRIANGLES, 0, sizeof(plain));
-	plainTextureModel = new TextureModel(plainTexture, sizeof(plainTexture) / sizeof(plainTexture[0]), GL_TRIANGLES, 0, sizeof(plainTexture));
-	plainDenseTextureModel = new TextureModel(plainDenseTexture, sizeof(plainDenseTexture) / sizeof(plainDenseTexture[0]), GL_TRIANGLES, 0, sizeof(plainDenseTexture));
-	houseModel = new AssimpModel("../Models/house.obj", GL_TRIANGLES);
-	loginModel = new AssimpModel("../Models/login.obj", GL_TRIANGLES);
-	dogModel = new AssimpModel("../Models/dog.obj", GL_TRIANGLES);
+	treeModel = ModelFactory::createModel(ModelType::BASIC, tree, sizeof(tree) / sizeof(bushes[0]),GL_TRIANGLES);
+	bushModel = ModelFactory::createModel(ModelType::BASIC, bushes, sizeof(bushes) / sizeof(bushes[0]), GL_TRIANGLES);
+	giftModel = ModelFactory::createModel(ModelType::BASIC, gift, sizeof(gift) / sizeof(gift[0]), GL_TRIANGLES);
+	triangleModel = ModelFactory::createModel(ModelType::BASIC, points, sizeof(points) / sizeof(points[0]), GL_TRIANGLES);
+	sphereModel = ModelFactory::createModel(ModelType::BASIC, sphere, sizeof(sphere) / sizeof(sphere[0]), GL_TRIANGLES);
+	suziSmoothModel = ModelFactory::createModel(ModelType::BASIC, suziSmooth, sizeof(suziSmooth) / sizeof(suziSmooth[0]), GL_TRIANGLES);
+	plainModel = ModelFactory::createModel(ModelType::BASIC, plain, sizeof(plain) / sizeof(plain[0]), GL_TRIANGLES);
+	plainTextureModel = ModelFactory::createModel(ModelType::TEXTURE,plainTexture, sizeof(plainTexture) / sizeof(plainTexture[0]), GL_TRIANGLES);
+	plainDenseTextureModel = ModelFactory::createModel(ModelType::TEXTURE,plainDenseTexture, sizeof(plainDenseTexture) / sizeof(plainDenseTexture[0]), GL_TRIANGLES);
+	houseModel = ModelFactory::createModel("../Models/house.obj", GL_TRIANGLES);
+	loginModel = ModelFactory::createModel("../Models/login.obj", GL_TRIANGLES);
+	dogModel = ModelFactory::createModel("../Models/dog.obj", GL_TRIANGLES);
 	
 }
 void App::createCameras()

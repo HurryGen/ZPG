@@ -1,6 +1,6 @@
 ﻿#include "TextureModel.h"
 
-TextureModel::TextureModel(const float* model, size_t vertexCount, GLuint mode, int first, int count) : Model(model, vertexCount, mode, first, count)
+TextureModel::TextureModel(const float* model, size_t vertexCount, GLuint mode, int first) : Model(model, vertexCount, mode, first)
 {
     //vertex buffer object (VBO)
     VBO = 0;

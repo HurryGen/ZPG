@@ -148,6 +148,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModelFactory.cpp" />
     <ClCompile Include="Observer.cpp" />
     <ClCompile Include="RandomTranslate.cpp" />
     <ClCompile Include="Rotate.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelFactory.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="RandomTranslate.h" />
     <ClInclude Include="Rotate.h" />

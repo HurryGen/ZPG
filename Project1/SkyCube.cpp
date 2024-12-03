@@ -3,7 +3,7 @@
 #include <iostream>
 #include <SOIL.h>
 
-SkyCube::SkyCube(): Model(skycube, 108, GL_TRIANGLES, 0, 36)
+SkyCube::SkyCube(): Model(skycube, 108, GL_TRIANGLES, 0)
 {
     //vertex buffer object (VBO)
     VBO = 0;
@@ -35,6 +35,6 @@ void SkyCube::draw()
 {
     glDepthMask(GL_FALSE);
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glDrawArrays(GL_TRIANGLES, 0, 108);
     glDepthMask(GL_TRUE);
 }
