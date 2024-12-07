@@ -133,6 +133,7 @@
     <ClCompile Include="AbstractModel.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="AssimpModel.cpp" />
+    <ClCompile Include="BezierTranslate.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="DrawableLight.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="AbstractModel.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="AssimpModel.h" />
+    <ClInclude Include="BezierTranslate.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="DrawableLight.h" />

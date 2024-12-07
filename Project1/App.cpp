@@ -1,6 +1,7 @@
 #include "App.h"
 
 #include "AssimpModel.h"
+#include "BezierTranslate.h"
 #include "DrawableLight.h"
 #include "../Models/tree.h"
 #include "../Models/bushes.h"
@@ -42,6 +43,7 @@ AbstractModel* houseModel;
 AbstractModel* dogModel;
 AbstractModel* plainTextureModel;
 AbstractModel* plainDenseTextureModel;
+AbstractModel* textureTreeModel;
 
 
 Scene* scene1;
@@ -221,6 +223,8 @@ void App::createModels()
 	houseModel = ModelFactory::createModel("../Models/house.obj", GL_TRIANGLES);
 	loginModel = ModelFactory::createModel("../Models/login.obj", GL_TRIANGLES);
 	dogModel = ModelFactory::createModel("../Models/dog.obj", GL_TRIANGLES);
+	textureTreeModel = ModelFactory::createModel("../Models/tree.obj", GL_TRIANGLES);
+	
 	
 }
 void App::createCameras()
@@ -245,6 +249,7 @@ void App::createScenes()
 	Material* woodMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/wooden_fence.png", 2);
 	Material* houseMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/house.png", 3);
 	Material* dogMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/dog.jpg", 4);
+	Material* treeMaterial = new Material(glm::vec3(0.f,0.f,0.f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f), "../Models/tree.png", 5);
 	//Transformation transformation;
 	scene1 = new Scene();
 	scene2 = new Scene();
@@ -358,7 +363,7 @@ void App::createScenes()
 		float heigth = (float)((std::rand() % (upperBoundHeigth - lowerBoundHeigth + 1)) + lowerBoundHeigth)/100;
 		float x = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
 		float z = (float)((std::rand() % (upperBound - lowerBound + 1)) + lowerBound);
-		DrawableObject* drawableTree = new DrawableObject(treeModel, shaderPhong, matteMaterial);
+		DrawableObject* drawableTree = new DrawableObject(textureTreeModel, shaderPhongTexture, treeMaterial);
 		Transformation transformation;
 
 		auto autoRotate = std::make_shared<DynamicRotate>(1.f,0.f, 1.f, 0.f);
@@ -368,7 +373,7 @@ void App::createScenes()
 		transformation.add(autoRotate);
 		auto rotate = std::make_shared<Rotate>(randAngle, 0.0f, 1.0f, 0.0f);
 		transformation.add(rotate);
-		auto scale = std::make_shared<Scale>(0.5f * heigth, 0.5f * heigth, 0.5f * heigth);
+		auto scale = std::make_shared<Scale>(0.2f * heigth, 0.2f * heigth, 0.2f * heigth);
 		transformation.add(scale);
 		drawableTree->setTransformation(transformation);
 		scene1->addObject(drawableTree);
@@ -441,24 +446,61 @@ void App::createScenes()
 	Transformation transformation1;
 	
 	transformation1.add(std::make_shared <Translate>(1.5f, 1.5f, 0.f));
+	
+	transformation1.add(std::shared_ptr<BezierTranslate>(new BezierTranslate(0.01f, 0.5f, glm::mat4(glm::vec4(-1.0, 3.0, -3.0, 1.0),
+		glm::vec4(3.0, -6.0, 3.0, 0),
+		glm::vec4(-3.0, 3.0, 0, 0),
+		glm::vec4(1, 0, 0, 0)), glm::mat4x3(glm::vec3(-1, 0, 0),
+		glm::vec3(0, 1, 0),
+		glm::vec3(0, -1, 0),
+		glm::vec3(1, 0, 0)))));
+	
+	
+
+	
 	drawableSphere1->setTransformation(transformation1);
 	scene2->addObject(drawableSphere1);
 
 	DrawableObject* drawableSphere2 = new DrawableObject(sphereModel, shaderLambert,shinyMaterial);
 	Transformation transformation2;
 	transformation2.add(std::make_shared <Translate>(-1.5f, 1.5f, 0.f));
+	transformation2.add(std::shared_ptr<BezierTranslate>(new BezierTranslate(0.01f, 0.5f, glm::mat4(glm::vec4(-1.0, 3.0, -3.0, 1.0),
+		glm::vec4(3.0, -6.0, 3.0, 0),
+		glm::vec4(-3.0, 3.0, 0, 0),
+		glm::vec4(1, 0, 0, 0)), glm::mat4x3(glm::vec3(1, 0, 0),
+		glm::vec3(0, 1, 0),
+		glm::vec3(0, 1, 0),
+		glm::vec3(-1, 0, 0)))));
 	drawableSphere2->setTransformation(transformation2);
+	
 	scene2->addObject(drawableSphere2);
+	
 
 	DrawableObject* drawableSphere3 = new DrawableObject(sphereModel, shaderBlinn,matteMaterial);
 	Transformation transformation3;
+	transformation3.add(std:: make_shared<DynamicRotate>(2, 1.0f, 0.0f, -1.0f));
 	transformation3.add(std::make_shared <Translate>(1.5f, -1.5f, 0.f));
+	transformation3.add(std::shared_ptr<BezierTranslate>(new BezierTranslate(0.01f, 0.5f, glm::mat4(glm::vec4(-1.0, 3.0, -3.0, 1.0),
+		glm::vec4(3.0, -6.0, 3.0, 0),
+		glm::vec4(-3.0, 3.0, 0, 0),
+		glm::vec4(1, 0, 0, 0)), glm::mat4x3(glm::vec3(-1, 0, 0),
+		glm::vec3(0, 1, 0),
+		glm::vec3(0, -1, 0),
+		glm::vec3(1, 0, 0)))));
+	
 	drawableSphere3->setTransformation(transformation3);
 	scene2->addObject(drawableSphere3);
 
 	DrawableObject* drawableSphere4 = new DrawableObject(sphereModel, shaderPhong,glowingMaterial);
 	Transformation transformation4;
 	transformation4.add(std::make_shared <Translate>(-1.5f, -1.5f, 0.f));
+	transformation4.add(std::shared_ptr<BezierTranslate>(new BezierTranslate(0.01f, 0.5f, glm::mat4(glm::vec4(-1.0, 3.0, -3.0, 1.0),
+		glm::vec4(3.0, -6.0, 3.0, 0),
+		glm::vec4(-3.0, 3.0, 0, 0),
+		glm::vec4(1, 0, 0, 0)), glm::mat4x3(glm::vec3(1, 0, 0),
+		glm::vec3(0, 1, 0),
+		glm::vec3(0, 1, 0),
+		glm::vec3(-1, 0, 0)))));
 	drawableSphere4->setTransformation(transformation4);
 	scene2->addObject(drawableSphere4);
 

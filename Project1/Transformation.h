@@ -17,7 +17,7 @@ public:
 	void add(const std::shared_ptr<TransformationComponent>& transformation);
 	glm::mat4 getMatrix() override;
 
-private:
+protected:
 	std::vector<std::shared_ptr<TransformationComponent>> transformations;
 };
 
