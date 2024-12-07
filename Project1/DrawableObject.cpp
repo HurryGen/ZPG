@@ -45,3 +45,13 @@ void DrawableObject::setSkyBoxFreeze(bool freeze)
 	}
 	
 }
+
+int DrawableObject::getId()
+{
+	return id;
+}
+
+void DrawableObject::setId(int id)
+{
+	this->id = id;
+}

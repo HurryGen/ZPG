@@ -20,6 +20,25 @@ void Scene::addObject(DrawableObject* object)
 	shaders.push_back(object->getShaderProgram());
 }
 
+void Scene::removeObject(GLuint id)
+{
+	for(auto object : objects)
+	{
+		cout << "Removing object with id: " << id << objects.size() << endl;
+		if(object->getId() == id )
+		{
+			cout << "Removing object with id: " << id << objects.size() << endl;
+			objects.erase(std::remove(objects.begin(), objects.end(), object), objects.end());
+			return;
+		}else if(id == objects.size())
+		{
+			DrawableObject* obj = objects.at(0);
+			objects.erase(std::remove(objects.begin(), objects.end(), obj), objects.end());
+			return;
+		}
+	}
+}
+
 void Scene::render()
 {
 	if (skyEnabled)
@@ -28,10 +47,16 @@ void Scene::render()
 		skyCubeObject->setSkyBoxFreeze(skyBoxFreeze);
 		skyCubeObject->draw();
 	}
-	for (DrawableObject* object : objects)
+	glEnable(GL_STENCIL_TEST);
+	glClear(GL_STENCIL_BUFFER_BIT);
+	for (int i = 0; i < objects.size(); i++)
 	{
-		object->draw();
+		objects.at(i)->draw();
+		objects.at(i)->setId(i);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+		glStencilFunc(GL_ALWAYS, i + 1 , 0xFF);
 	}
+	glDisable(GL_STENCIL_TEST);
 }
 
 void Scene::setCamera(Camera* camera)

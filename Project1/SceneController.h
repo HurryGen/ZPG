@@ -13,6 +13,8 @@ public:
     void setCamera(Camera* camera);
     void switchScene(int index);
     void freezSkyBox();
+    void spawnObject(DrawableObject* object, glm::vec3 position);
+    void removeObject(GLuint id);
 
 
 

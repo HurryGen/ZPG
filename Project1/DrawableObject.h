@@ -13,12 +13,15 @@ public:
 	ShaderProgram* getShaderProgram();
 	void draw() override;
 	void setSkyBoxFreeze(bool freeze);
+	int getId();
+	void setId(int id);
 protected:
 	AbstractModel* model;
 	Transformation transformation;
 	ShaderProgram* shader;
 	Material* material;
 	bool skyBoxFreeze;
+	int id;
 	
 };
 

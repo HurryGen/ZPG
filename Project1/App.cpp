@@ -120,6 +120,43 @@ void App::cursor_callback(GLFWwindow* window, double x, double y)
 void App::button_callback(GLFWwindow* window, int button, int action, int mode)
 {
 	if (action == GLFW_PRESS) printf("button_callback [%d,%d,%d]\n", button, action, mode);
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+	{
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+		int width, height;
+		glfwGetFramebufferSize(window, &width, &height);
+		ypos = height - ypos;
+
+		GLuint stencilValue;
+		float depth;
+		glReadPixels(static_cast<int>(xpos), static_cast<int>(ypos), 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &stencilValue);
+		glReadPixels(static_cast<int>(xpos), static_cast<int>(ypos), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+		glm::vec3 p = glm::unProject(glm::vec3(xpos, ypos, depth), camera->getCamera(), camera->getProjection(), glm::vec4(0, 0, width, height));
+		
+
+		if (stencilValue > 0)
+		{
+			std::cout << "Vybraný objekt s ID: " << stencilValue << std::endl;
+			std::cout << "Pozice: " << p.x << " " << p.y << " " << p.z << std::endl;
+			sceneController->spawnObject(new DrawableObject(sphereModel, shaderPhong, new Material(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f))), p);
+		}
+	}
+	if(button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
+	{
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+		int width, height;
+		glfwGetFramebufferSize(window, &width, &height);
+		ypos = height - ypos;
+
+		GLuint stencilValue;
+		glReadPixels(static_cast<int>(xpos), static_cast<int>(ypos), 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &stencilValue);
+		if (stencilValue > 0)
+		{
+			sceneController->removeObject(stencilValue);
+		}
+	}
 }
 
 void App::initialization()
@@ -306,7 +343,6 @@ void App::createScenes()
 	
 	
 	
-
 	scene->addObject(new DrawableObject(triangleModel, shader1,glowingMaterial));
 
 	DrawableObject* drawablePlain = new DrawableObject(plainDenseTextureModel, shaderPhongTexture , grassMaterial);
@@ -326,6 +362,7 @@ void App::createScenes()
 	Transformation transformationLogin;
 	
 	transformationLogin.add(std::make_shared <Translate>(8.f, 2.f, 8.f));
+	transformationLogin.add(std::make_shared <DynamicRotate>(1.f, 0.f, 1.f, 0.f));
 	transformationLogin.add(std::make_shared <Scale>(2.f, 2.f, 2.f));
 	drawableLogin->setTransformation(transformationLogin);
 	scene1->addObject(drawableLogin);
@@ -366,11 +403,11 @@ void App::createScenes()
 		DrawableObject* drawableTree = new DrawableObject(textureTreeModel, shaderPhongTexture, treeMaterial);
 		Transformation transformation;
 
-		auto autoRotate = std::make_shared<DynamicRotate>(1.f,0.f, 1.f, 0.f);
+		//auto autoRotate = std::make_shared<DynamicRotate>(1.f,0.f, 1.f, 0.f);
 		
 		auto translate = std::make_shared<Translate>(x, 0.f, z);
 		transformation.add(translate);
-		transformation.add(autoRotate);
+		//transformation.add(autoRotate);
 		auto rotate = std::make_shared<Rotate>(randAngle, 0.0f, 1.0f, 0.0f);
 		transformation.add(rotate);
 		auto scale = std::make_shared<Scale>(0.2f * heigth, 0.2f * heigth, 0.2f * heigth);
@@ -572,7 +609,7 @@ void App::createScenes()
 
 void App::run()
 {
-	bool fKeyPressed = false; 
+	bool fKeyPressed = false;
 	glEnable(GL_DEPTH_TEST);
 	while (!glfwWindowShouldClose(window)) {
 		//clear color and depth buffer

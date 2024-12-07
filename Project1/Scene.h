@@ -10,6 +10,7 @@ public:
 	Scene();
 	~Scene();
 	void addObject(DrawableObject* object);
+	void removeObject(GLuint id);
 	void render();
 	void setCamera(Camera* camera);
 	void addLight(Light* light);

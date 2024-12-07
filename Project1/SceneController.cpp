@@ -44,3 +44,18 @@ void SceneController::freezSkyBox()
     scenes[currentSceneIndex]->setSkyBoxFreeze(skyBoxFreeze);
 }
 
+void SceneController::spawnObject(DrawableObject* object, glm::vec3 position)
+{
+    Transformation transformation;
+    transformation.add(std::shared_ptr<Translate>(new Translate(position.x, position.y, position.z)));
+    scenes[currentSceneIndex]->addObject(object);
+    object->setTransformation(transformation);
+}
+
+void SceneController::removeObject(GLuint id)
+{
+    scenes[currentSceneIndex]->removeObject(id);
+}
+
+
+
