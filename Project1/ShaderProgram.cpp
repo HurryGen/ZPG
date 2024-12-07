@@ -41,6 +41,10 @@ void ShaderProgram::update(Subject* subject)
         glUniformMatrix4fv(idModelView, 1, GL_FALSE, glm::value_ptr(camera->getCamera()));
         glUniformMatrix4fv(idModelProjection, 1, GL_FALSE, glm::value_ptr(camera->getProjection()));
         glUniform3fv(idCameraPosition, 1, glm::value_ptr(camera->getPosition()));
+        if(!skyBoxFreeze)
+        {
+            glUniformMatrix4fv(glGetUniformLocation(shaderProgram,"modelMat"), 1, GL_FALSE, glm::value_ptr(glm::translate(M, camera->getPosition())));
+        }
     }
     if (auto light = dynamic_cast<Light*>(subject))
     {
@@ -74,6 +78,14 @@ void ShaderProgram::setTexture(GLuint textureUnit)
 {
     use();
     glUniform1i(glGetUniformLocation(shaderProgram, "textureUnitID"), textureUnit);
+    use0();
+}
+
+void ShaderProgram::setSkyCubeFreeze(bool freeze)
+{
+    skyBoxFreeze = freeze;
+    use();
+    glUniform1i(glGetUniformLocation(shaderProgram, "isFreezed"), skyBoxFreeze);
     use0();
 }
 

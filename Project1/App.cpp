@@ -11,6 +11,7 @@
 #include "DynamicRotate.h"
 #include "ModelFactory.h"
 #include "RandomTranslate.h"
+#include "SceneController.h"
 #include "SkyCube.h"
 #include "TextureModel.h"
 #include "../Models/plainTexture.h"
@@ -49,6 +50,10 @@ Scene* scene3;
 Scene* scene4;
 Scene* scene;
 Camera* camera;
+
+SceneController* sceneController = new SceneController();
+
+
 
 
 
@@ -221,12 +226,14 @@ void App::createModels()
 void App::createCameras()
 {
 	camera = new Camera();
+	sceneController->setCamera(camera);
 }
 
 
 
 void App::createScenes()
 {
+	
 	Light* light1 = new Light(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec4(1.0f, 1.0f, 2.f, 1.0f),glm::vec3(1.0, 0.018, 0.005) ,glm::vec3(0.05f, -1.0f, 0.0f), 25.f);
 	Light* light2 = new Light(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f), glm::vec3(1.0, 0.018, 0.005));
 	Light* light3 = new Light(glm::vec3(3.0f, 2.0f, 8.0f), glm::vec4(1.0f, 1.0f, 1.f, 1.0f), glm::vec3(1.0, 0.018, 0.005));
@@ -255,7 +262,7 @@ void App::createScenes()
 	camera->attach(light1);
 
 
-	scene1->addLight(light1);
+	//scene1->addLight(light1);
 	//scene1->addLight(light3);
 	scene1->addLight(directionLight);
 	
@@ -503,7 +510,13 @@ void App::createScenes()
 
 
 	
-
+	sceneController->addScene(scene);
+	sceneController->addScene(scene1);
+	sceneController->addScene(scene2);
+	sceneController->addScene(scene3);
+	sceneController->addScene(scene4);
+	
+	
 	
 	
 	
@@ -517,14 +530,12 @@ void App::createScenes()
 
 void App::run()
 {
-	int sceneIndex = 0;
-	
+	bool fKeyPressed = false; 
 	glEnable(GL_DEPTH_TEST);
 	while (!glfwWindowShouldClose(window)) {
 		//clear color and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//model->draw(GL_TRIANGLES, 0, 3);
-		//model->draw(GL_QUADS, 3, 4);
+		
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 			camera->moveForward();
 		}
@@ -537,53 +548,38 @@ void App::run()
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 			camera->moveRight();
 		}
+		if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+			if (!fKeyPressed) {
+				sceneController->freezSkyBox();
+				fKeyPressed = true; 
+			}
+		} else if (glfwGetKey(window, GLFW_KEY_F) == GLFW_RELEASE) {
+			fKeyPressed = false; 
+		}
 		if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE){
 			lockMouse = true;
 		}
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
 			lockMouse = false;
 		}
-
-		
-		
-		
-
-		if (sceneIndex == 0) {
-			scene->render();
-		}
-		if (sceneIndex == 1) {
-			scene1->render();
-		}
-		if (sceneIndex == 2) {
-			scene2->render();
-		}
-		if (sceneIndex == 3) {
-			scene3->render();
-		}
-		if (sceneIndex == 4) {
-			scene4->render();	
-		}
-		
 		
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
-			sceneIndex = 0;
+			sceneController->switchScene(0);
 		}
 		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
-			scene1->lightsInit();
-			sceneIndex = 1;
+			sceneController->switchScene(1);
 		}
 		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
-			scene2->lightsInit();
-			sceneIndex = 2;
+			sceneController->switchScene(2);
 		}
 		if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
-			scene3->lightsInit();
-			sceneIndex = 3;
+			sceneController->switchScene(3);
 		}
 		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
-			scene4->lightsInit();
-			sceneIndex = 4;
+			sceneController->switchScene(4);
 		}
+
+		sceneController->render();
 		
 		
 		// update other events like input handling

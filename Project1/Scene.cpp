@@ -24,8 +24,9 @@ void Scene::render()
 {
 	if (skyEnabled)
 	{
+		skyCubeObject->getShaderProgram()->setSkyCubeFreeze(skyBoxFreeze);
+		skyCubeObject->setSkyBoxFreeze(skyBoxFreeze);
 		skyCubeObject->draw();
-		
 	}
 	for (DrawableObject* object : objects)
 	{
@@ -46,6 +47,7 @@ void Scene::addLight(Light* light)
 void Scene::removeLight(Light* light)
 {
 	lights.erase(std::remove(lights.begin(), lights.end(), light), lights.end());
+	light->setId(-1);
 }
 
 void Scene::cameraInit()
@@ -90,3 +92,16 @@ void Scene::renderSkybox()
 		skyCubeObject->draw();
 	}
 }
+
+std::vector<Light*> Scene::getLights()
+{
+	return this->lights;
+}
+
+void Scene::setSkyBoxFreeze(bool freeze)
+{
+	skyBoxFreeze = freeze;
+}
+
+
+

@@ -19,6 +19,8 @@ public:
 	void setSkyEnabled(bool enabled);
 	std::vector<DrawableObject*> getObjects();
 	void renderSkybox();
+	std::vector<Light*> getLights();
+	void setSkyBoxFreeze(bool freeze);
 
 private:
 	std::vector<DrawableObject*> objects;
@@ -27,6 +29,7 @@ private:
 	std::vector<Light*> lights;
 	bool skyEnabled = false;
 	SkyCube* skyCube;
+	bool skyBoxFreeze = false;
 	DrawableObject* skyCubeObject;
 	ShaderProgram* shaderSkybox;
 

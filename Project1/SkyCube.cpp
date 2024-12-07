@@ -33,8 +33,16 @@ SkyCube::SkyCube(): Model(skycube, 108, GL_TRIANGLES, 0)
 
 void SkyCube::draw()
 {
-    glDepthMask(GL_FALSE);
+    if(!freeze)
+    {
+        glDepthMask(GL_FALSE);
+    }
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 108);
     glDepthMask(GL_TRUE);
+}
+
+void SkyCube::setFreeze(bool freeze)
+{
+    this->freeze = freeze;
 }

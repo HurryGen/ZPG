@@ -31,6 +31,7 @@ public:
 	void setNumberOfLights(int numLights);
 	void setMaterial(Material* material);
 	void setTexture(GLuint textureUnit);
+	void setSkyCubeFreeze(bool freeze);
 	void use();
 	void use0();
 
@@ -42,6 +43,7 @@ private:
 	GLint idModelProjection;
 	GLint idCameraPosition;
 	GLint idNumLights;
+	bool skyBoxFreeze = false;
 };
 
 #endif

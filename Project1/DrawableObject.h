@@ -12,11 +12,13 @@ public:
 	void setTransformation(Transformation& transformation) override;
 	ShaderProgram* getShaderProgram();
 	void draw() override;
+	void setSkyBoxFreeze(bool freeze);
 protected:
 	AbstractModel* model;
 	Transformation transformation;
 	ShaderProgram* shader;
 	Material* material;
+	bool skyBoxFreeze;
 	
 };
 

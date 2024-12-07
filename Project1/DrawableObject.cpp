@@ -36,3 +36,12 @@ void DrawableObject::draw()
 	model->draw();
 	shader->use0();
 }
+
+void DrawableObject::setSkyBoxFreeze(bool freeze)
+{
+	if(auto skyCube = dynamic_cast<SkyCube*>(model))
+	{
+		skyCube->setFreeze(freeze);
+	}
+	
+}
