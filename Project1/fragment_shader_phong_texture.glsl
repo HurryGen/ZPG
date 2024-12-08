@@ -3,7 +3,7 @@ in vec3 fragPosition;
 in vec3 fragNormal;
 out vec4 fragColor;
 
-uniform vec4 ambient = vec4(0.0, 0.0, 0.0, 0.0);
+uniform vec4 ambient = vec4(1.0, 1.0, 1.0, 1.0);
 uniform vec3 cameraPosition;
 uniform float specularStrength = 70.0;
 in vec2 fragUV;

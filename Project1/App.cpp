@@ -293,6 +293,7 @@ void App::createScenes()
 	scene3 = new Scene();
 	scene4 = new Scene();
 	scene = new Scene();
+	Scene * nightScene = new Scene();
 
 
 	
@@ -301,6 +302,7 @@ void App::createScenes()
 	scene2->setCamera(camera);
 	scene3->setCamera(camera);
 	scene4->setCamera(camera);
+	nightScene->setCamera(camera);
 	camera->attach(light1);
 
 
@@ -314,6 +316,7 @@ void App::createScenes()
 	scene3->addLight(light1);
 	scene2->addLight(light1);
 	scene4->addLight(light1);
+	nightScene->addLight(light1);
 	
 	light1->attach(shaderPhong);
 	light1->attach(shaderBlinn);
@@ -351,21 +354,25 @@ void App::createScenes()
 	transformationPlain.add(std::make_shared <Scale>(50.f, 50.f, 50.f));
 	drawablePlain->setTransformation(transformationPlain);
 	scene1->addObject(drawablePlain);
+	nightScene->addObject(drawablePlain);
 
 	DrawableObject* drawableHouse = new DrawableObject(houseModel, shaderPhongTexture, houseMaterial);
 	Transformation transformationHouse;
-	transformationHouse.add(std::make_shared <Translate>(0.f, 0.f, 0.f));
+	transformationHouse.add(std::make_shared <Translate>(0.f, 0.f, -25.f));
+	transformationHouse.add(std::make_shared <Rotate>(-90.f,0.0, 1.0f, 0.0f));
 	drawableHouse->setTransformation(transformationHouse);
 	scene1->addObject(drawableHouse);
+	nightScene->addObject(drawableHouse);
 
 	DrawableObject* drawableLogin = new DrawableObject(loginModel, shaderPhongTexture, woodMaterial);
 	Transformation transformationLogin;
 	
-	transformationLogin.add(std::make_shared <Translate>(8.f, 2.f, 8.f));
+	transformationLogin.add(std::make_shared <Translate>(0.f, 15.f, 0.f));
 	transformationLogin.add(std::make_shared <DynamicRotate>(1.f, 0.f, 1.f, 0.f));
 	transformationLogin.add(std::make_shared <Scale>(2.f, 2.f, 2.f));
 	drawableLogin->setTransformation(transformationLogin);
 	scene1->addObject(drawableLogin);
+	nightScene->addObject(drawableLogin);
 
 
 	DrawableObject* drawableDog = new DrawableObject(dogModel, shaderPhongTexture, dogMaterial);
@@ -374,9 +381,10 @@ void App::createScenes()
 	transformationDog.add(std::make_shared<Rotate>(90, 1.0f, 0.0f, 0.0f));
 	transformationDog.add(std::make_shared<Rotate>(180, 0.0f, 1.0f, 0.0f));
 	transformationDog.add(std::make_shared<Rotate>(180, 0.0f, 0.0f, 1.0f));
-	transformationDog.add(std::make_shared <Scale>(0.05f, 0.05f, 0.05f));
+	transformationDog.add(std::make_shared <Scale>(0.08f, 0.08f, 0.08f));
 	drawableDog->setTransformation(transformationDog);
 	scene1->addObject(drawableDog);
+	nightScene->addObject(drawableDog);
 
 	// DrawableObject* drawablePlainTexture = new DrawableObject(plainTextureModel, shaderPhongTexture, woodMaterial);
 	// Transformation transformationPlainTexture;
@@ -414,6 +422,7 @@ void App::createScenes()
 		transformation.add(scale);
 		drawableTree->setTransformation(transformation);
 		scene1->addObject(drawableTree);
+		nightScene->addObject(drawableTree);
 		
 		
 	}
@@ -440,11 +449,12 @@ void App::createScenes()
 		transformation.add(scale);
 		drawableBush->setTransformation(transformation);
 		scene1->addObject(drawableBush);
+		nightScene->addObject(drawableBush);
 
 
 	}
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 10; i++) {
 		
 
 		//DrawableObject* drawableSuziSmooth = new DrawableObject(suziSmoothModel, shaderPhong);
@@ -463,6 +473,7 @@ void App::createScenes()
 		drawableLight->attach(shaderDrawableLight);
 		drawableLight->attach(shaderPhongTexture);
 		scene1->addLight(drawableLight);
+		nightScene->addLight(drawableLight);
 		auto translate = std::make_shared <RandomTranslate>(5.f, x, 0.0f, z);
 		translate->setBoundsX(-5.f, 5.f);
 		translate->setBoundsY(1.f, 5.f);
@@ -473,6 +484,7 @@ void App::createScenes()
 		drawableLight->setTransformation(transformation);
 		
 		scene1->addObject(drawableLight);
+		nightScene->addObject(drawableLight);
 	}
 
 
@@ -585,15 +597,18 @@ void App::createScenes()
 	scene2->cameraInit();
 	scene3->cameraInit();
 	scene4->cameraInit();
+	nightScene->cameraInit();
 
 
 
 	
 	sceneController->addScene(scene);
 	sceneController->addScene(scene1);
+	sceneController->addScene(nightScene);
 	sceneController->addScene(scene2);
 	sceneController->addScene(scene3);
 	sceneController->addScene(scene4);
+	
 	
 	
 	
@@ -656,6 +671,9 @@ void App::run()
 		}
 		if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
 			sceneController->switchScene(4);
+		}
+		if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) {
+			sceneController->switchScene(5);
 		}
 
 		sceneController->render();
