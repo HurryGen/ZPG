@@ -19,8 +19,7 @@ ShaderProgram::ShaderProgram(const char* vertexFilePath, const char* fragmentFil
     idModelView = glGetUniformLocation(shaderProgram, "viewMatrix");
     idModelProjection = glGetUniformLocation(shaderProgram, "projectionMatrix");
     idCameraPosition = glGetUniformLocation(shaderProgram, "cameraPosition");
-    //idLightColor = glGetUniformLocation(shaderProgram, "lightColor");
-    //idLightPosition = glGetUniformLocation(shaderProgram, "lightPosition");
+    
     idNumLights = glGetUniformLocation(shaderProgram, "numLights");
 }
 

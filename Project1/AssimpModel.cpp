@@ -20,7 +20,7 @@ AssimpModel::AssimpModel(std::string fileName, GLuint mode) : mode(mode)
 
     const aiScene* scene = importer.ReadFile(fileName, importOptions);
 
-    if (scene) { //pokud bylo nacteni uspesne
+    if (scene) { 
         printf("scene->mNumMeshes = %d\n", scene->mNumMeshes);
         printf("scene->mNumMaterials = %d\n", scene->mNumMaterials);
         //Materials
@@ -95,7 +95,7 @@ AssimpModel::AssimpModel(std::string fileName, GLuint mode) : mode(mode)
             glEnableVertexAttribArray(2);
             glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
 
-            //Tangent for Normal Map
+            
             glEnableVertexAttribArray(3);
             glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(8 * sizeof(GLfloat)));
 

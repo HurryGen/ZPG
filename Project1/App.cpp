@@ -137,7 +137,7 @@ void App::button_callback(GLFWwindow* window, int button, int action, int mode)
 
 		if (stencilValue > 0)
 		{
-			std::cout << "Vybraný objekt s ID: " << stencilValue << std::endl;
+			std::cout << "Vybrany objekt s ID: " << stencilValue << std::endl;
 			std::cout << "Pozice: " << p.x << " " << p.y << " " << p.z << std::endl;
 			sceneController->spawnObject(new DrawableObject(sphereModel, shaderPhong, new Material(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.7f, 0.7f, 0.7f), glm::vec3(0.0f, 0.0f, 0.0f))), p);
 		}
@@ -556,9 +556,9 @@ void App::createScenes()
 	
 
 	DrawableObject* drawableGift = new DrawableObject(giftModel, shaderPhong,glowingMaterial);
-	DrawableObject* drawableSuziSmooth = new DrawableObject(suziSmoothModel, shaderPhong,shinyMaterial);
-	DrawableObject* drawableTree = new DrawableObject(treeModel, shaderPhong,matteMaterial);
-	DrawableObject* drawableSphere = new DrawableObject(sphereModel, shaderPhong,matteMaterial);
+	DrawableObject* drawableSuziSmooth = new DrawableObject(suziSmoothModel, shaderBlinn,glowingMaterial);
+	DrawableObject* drawableTree = new DrawableObject(treeModel, shaderLambert,glowingMaterial);
+	DrawableObject* drawableSphere = new DrawableObject(sphereModel, shaderPhong,glowingMaterial);
 	Transformation transformationGift;
 	Transformation transformationSuziSmooth;
 	Transformation transformationTree;
